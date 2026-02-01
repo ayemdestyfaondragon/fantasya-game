@@ -128,7 +128,22 @@
 
     function afficherMain() {
         const handDiv = document.getElementById('player-hand');
-        handDiv.innerHTML = "";
+        // Dans afficherMain et poserSurTerrain, remplace l'innerHMTL par :
+        cardEl.innerHTML = `
+        <div class="card-header">${carte.nom}</div>
+        <div style="font-size:9px; color:#666; text-align:center;">${carte.univers}</div>
+    
+        <div style="width:100%; height:80px; background:#ccc; margin:5px 0; overflow:hidden;">
+        <img src="./images/${carte.nom}.png" alt="${carte.nom}" 
+             style="width:100%; height:100%; object-fit:cover;"
+             onerror="this.style.display='none';"> </div>
+
+        <div class="card-rules">${carte.regles}</div>
+        <div class="card-footer">
+        <span>💎 ${carte.cout}</span>
+        <span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span>
+    </div>
+`;;
         mainJoueur.forEach((carte, index) => {
             const cardEl = document.createElement('div');
             cardEl.className = `card ${carte.type.toLowerCase()}`;
@@ -170,17 +185,24 @@
         const board = document.getElementById('game-board');
         const cardEl = document.createElement('div');
         cardEl.className = "card personnage";
-        cardEl.innerHTML = `
-            <div class="card-header">${carte.nom}</div>
-            <div class="card-rules" style="font-size:9px">${carte.regles}</div>
-            <div class="card-footer">
-                <span>🛡️ ${carte.stats.endurance}</span>
-                <span>⚔️ ${carte.stats.force}</span>
-            </div>
-        `;
-        board.appendChild(cardEl);
-    }
+        // Dans afficherMain et poserSurTerrain, remplace l'innerHMTL par :
+cardEl.innerHTML = `
+    <div class="card-header">${carte.nom}</div>
+    <div style="font-size:9px; color:#666; text-align:center;">${carte.univers}</div>
+    
+    <div style="width:100%; height:80px; background:#ccc; margin:5px 0; overflow:hidden;">
+        <img src="./images/${carte.nom}.jpg" alt="${carte.nom}" 
+             style="width:100%; height:100%; object-fit:cover;"
+             onerror="this.style.display='none';"> </div>
 
+    <div class="card-rules">${carte.regles}</div>
+    <div class="card-footer">
+        <span>💎 ${carte.cout}</span>
+        <span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span>
+    </div>
+`;
+    }
+    
     function lancerActivite(carte, index) {
         const persosLibres = document.querySelectorAll('#game-board .card.personnage:not(.occupe)');
         if (persosLibres.length > 0) {
@@ -301,6 +323,7 @@ function finirTour() {
 </body>
 
 </html>
+
 
 
 
