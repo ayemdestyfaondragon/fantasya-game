@@ -36,7 +36,18 @@
         button:disabled { background: #555; cursor: not-allowed; }
 
         .occupe { opacity: 0.6; filter: grayscale(80%); border: 3px dashed #ff9800 !important; }
-
+        .card.occupe::after {
+        content: "💤 SOMMEIL";
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 5px;
+        font-weight: bold;
+        border-radius: 5px;
+        font-size: 14px;
+}
         /* Écran de Victoire */
         #victory-screen {
         display: none;
@@ -290,6 +301,7 @@ function finirTour() {
 </body>
 
 </html>
+
 
 
 
