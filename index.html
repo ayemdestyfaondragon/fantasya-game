@@ -185,26 +185,63 @@
     }
 
     function finirTour() {
-        // Phase de Récupération (Demain)
-        activitesEnAttente.forEach(act => {
-            act.element.classList.remove('occupe');
-            // Simulation simple de gain (à adapter selon les règles de la carte)
-            scoreFantaisie += 5; 
-        });
-        activitesEnAttente = [];
-        
-        // Phase de Pioche
-        if(deck.length > 0) mainJoueur.push(deck.shift());
+    let totalGainCeTour = 0;
 
-        // Reset Ressources
-        imagination = 5;
-        temps = 3;
-        
-        actualiserStats();
-        afficherMain();
-        alert("Nouveau jour ! +1 carte piochée. Activités complétées.");
+    // Phase de Récupération (Demain) : On résout les activités
+    activitesEnAttente.forEach(act => {
+        let gain = 0;
+        const id = act.carte.id;
+
+        // Dictionnaire des gains selon ton fichier JSON
+        if (id === "0003") gain = 10; // Bal dans le Bayou
+        else if (id === "0004") gain = 4;  // Balade à Dos d’Autruche
+        else if (id === "0013") gain = 5;  // Chasse Nocturne
+        else if (id === "0014") gain = 6;  // Chasser dans la savane
+        else if (id === "0022") gain = 4;  // Course en forêt
+        else if (id === "0023") gain = 10; // Croquet Royal
+        else if (id === "0024") gain = 5;  // Cuisine Du Gombo
+        else if (id === "0028") gain = 5;  // Entraînement au Camp
+        else if (id === "0030") gain = 10; // Escalade du poteau
+        else if (id === "0032") gain = 8;  // Évasion de la Caverne aux Merveilles
+        else if (id === "0035") gain = 7;  // Exploration d’épaves
+        else if (id === "0037") gain = 6;  // Festival Des Lumières
+        else if (id === "0064") gain = 6;  // Navigation Astrale
+        else if (id === "0067") gain = 10; // Pacte avec la Sorcière
+        else if (id === "0071") gain = 4;  // Peinture murale
+        else if (id === "0081") gain = 4;  // Saut de la cascade
+        else if (id === "0085") gain = 3;  // Sieste dans la Jungle
+        else if (id === "0094") gain = 4;  // Tea Party
+        else if (id === "0096") gain = 6;  // Traversé du Récif
+        else if (id === "0099") gain = 2;  // Vol au Marché (base)
+        else gain = 2; // Gain par défaut pour les autres activités
+
+        scoreFantaisie += gain;
+        totalGainCeTour += gain;
+
+        // On libère le personnage
+        act.element.classList.remove('occupe');
+    });
+
+    if(totalGainCeTour > 0) {
+        alert(`Matinée : Vos activités sont terminées ! Gain de +${totalGainCeTour} Fantaisie.`);
     }
 
+    activitesEnAttente = [];
+
+    // Phase de Pioche automatique
+    if (deck.length > 0) {
+        mainJoueur.push(deck.shift());
+    } else {
+        alert("Plus de cartes dans la pioche !");
+    }
+
+    // Reset des ressources (Phase de Réveil)
+    imagination = 5;
+    temps = 3;
+
+    actualiserStats();
+    afficherMain();
+}
     function actualiserStats() {
     document.getElementById('imagination').innerText = imagination;
     document.getElementById('temps').innerText = temps;
@@ -253,5 +290,6 @@ function finirTour() {
 </body>
 
 </html>
+
 
 
