@@ -36,10 +36,30 @@
         button:disabled { background: #555; cursor: not-allowed; }
 
         .occupe { opacity: 0.6; filter: grayscale(80%); border: 3px dashed #ff9800 !important; }
+
+        /* Écran de Victoire */
+        #victory-screen {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+}
+        #victory-screen h1 { font-size: 80px; color: #e94560; text-shadow: 0 0 20px #ff5e78; margin: 0; }
+        #victory-screen p { font-size: 24px; color: white; }
     </style>
 </head>
 <body>
-
+<div id="victory-screen">
+    <h1>VICTOIRE !</h1>
+    <p>Vous avez atteint 50 points de Fantaisie.</p>
+    <button onclick="location.reload()">Rejouer</button>
+</div>
+    
 <div id="status-bar">
     <div class="stat">Fantaisie: <span id="fantaisie">0</span>/50</div>
     <div class="stat">Imagination: <span id="imagination">5</span></div>
@@ -186,11 +206,46 @@
     }
 
     function actualiserStats() {
-        document.getElementById('imagination').innerText = imagination;
-        document.getElementById('temps').innerText = temps;
-        document.getElementById('fantaisie').innerText = scoreFantaisie;
+    document.getElementById('imagination').innerText = imagination;
+    document.getElementById('temps').innerText = temps;
+    document.getElementById('fantaisie').innerText = scoreFantaisie;
+
+    // Condition de Victoire
+    if (scoreFantaisie >= 50) {
+        document.getElementById('victory-screen').style.display = 'flex';
+    }
+}
+
+function finirTour() {
+    // 1. Phase de Sommeil (Vérification des activités)
+    if (activitesEnAttente.length > 0) {
+        activitesEnAttente.forEach(act => {
+            // On récupère les points de la carte (si pas de score, on donne 5 par défaut)
+            let gain = 5; 
+            // Exemple : si c'est Ariel (ID 0001), elle pourrait donner plus
+            scoreFantaisie += gain;
+            
+            // On libère le personnage
+            act.element.classList.remove('occupe');
+            let infoAttente = act.element.querySelector('.status-txt');
+            if(infoAttente) infoAttente.remove();
+        });
+        alert(`Tour terminé ! Vos activités vous ont rapporté des points.`);
+        activitesEnAttente = [];
     }
 
+    // 2. Phase de Pioche automatique
+    if (deck.length > 0) {
+        mainJoueur.push(deck.shift());
+    }
+
+    // 3. Reset des ressources (Phase de Réveil)
+    imagination = 5;
+    temps = 3;
+
+    actualiserStats();
+    afficherMain();
+}
     initialiserJeu();
 </script>
 </body>
@@ -198,4 +253,5 @@
 </body>
 
 </html>
+
 
