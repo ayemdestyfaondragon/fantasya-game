@@ -4,25 +4,38 @@
     <meta charset="UTF-8">
     <title>Fantasya - Le Jeu</title>
     <style>
-        body { background: #1a1a2e; color: white; font-family: Arial; margin: 0; overflow: hidden; }
+        body { background: #1a1a2e; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow: hidden; }
         
-        /* Compteurs en haut */
-        #status-bar { background: #16213e; padding: 10px; display: flex; justify-content: space-around; border-bottom: 2px solid #e94560; }
-        .stat { font-size: 20px; font-weight: bold; }
-        .stat span { color: #e94560; }
+        /* Barre d'état améliorée */
+        #status-bar { background: #16213e; padding: 15px; display: flex; justify-content: space-around; align-items: center; border-bottom: 3px solid #e94560; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .stat { font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; }
+        .stat span { color: #e94560; font-size: 22px; }
 
         /* Zones de jeu */
-        #game-board { height: 60vh; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; }
-        #player-hand { height: 30vh; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.3); }
+        #game-board { height: 55vh; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px; flex-wrap: wrap; }
+        #player-hand { height: 35vh; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.4); border-top: 2px solid #444; }
 
-        /* Cartes */
-        .card { width: 120px; height: 170px; background: #fff; color: #000; border-radius: 8px; padding: 5px; font-size: 12px; cursor: pointer; transition: transform 0.2s; border: 2px solid #333; }
-        .card:hover { transform: translateY(-20px); border-color: #e94560; }
-        .card.personnage { background: #e1f5fe; }
-        .card.activite { background: #fff9c4; }
-        .card.chanson { background: #f3e5f5; }
+        /* Design des Cartes */
+        .card { width: 130px; height: 185px; background: white; color: #333; border-radius: 10px; padding: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s; border: 3px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-15px) scale(1.05); border-color: #e94560; z-index: 10; }
         
-        button { background: #e94560; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        /* Couleurs par Type */
+        .card.personnage { border-color: #2196f3; background: #f0f7ff; }
+        .card.activité { border-color: #ff9800; background: #fffde7; }
+        .card.chanson { border-color: #9c27b0; background: #fdf0ff; }
+        .card.objet { border-color: #4caf50; background: #f1fff2; }
+        .card.rôle { border-color: #795548; background: #efebe9; }
+
+        .card-header { font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 5px; font-size: 12px; color: #000; }
+        .card-rules { flex-grow: 1; font-style: italic; font-size: 10px; margin-top: 5px; line-height: 1.2; }
+        .card-footer { display: flex; justify-content: space-between; font-weight: bold; margin-top: 5px; }
+
+        /* Boutons */
+        button { background: #e94560; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #ff5e78; transform: scale(1.05); }
+        button:disabled { background: #555; cursor: not-allowed; }
+
+        .occupe { opacity: 0.6; filter: grayscale(80%); border: 3px dashed #ff9800 !important; }
     </style>
 </head>
 <body>
@@ -31,7 +44,8 @@
     <div class="stat">Fantaisie: <span id="fantaisie">0</span>/50</div>
     <div class="stat">Imagination: <span id="imagination">5</span></div>
     <div class="stat">Temps: <span id="temps">3</span></div>
-    <button onclick="finirTour()">Finir le Tour</button>
+    <button id="btn-mulligan" onclick="mulligan()">Mulligan (1x)</button>
+    <button onclick="finirTour()">Finir le Tour (Sommeil)</button>
 </div>
 
 <div id="game-board">
@@ -41,31 +55,46 @@
     </div>
 
 <script>
-    // 1. On charge la base de données (Fais bien attention que fantasya_cards.json soit dans le même dossier)
     let bddCartes = [];
+    let deck = [];
     let mainJoueur = [];
+    let activitesEnAttente = [];
     let imagination = 5;
     let temps = 3;
+    let scoreFantaisie = 0;
+    let mulliganFait = false;
 
     async function initialiserJeu() {
         try {
+            // Chargement sécurisé pour GitHub Pages
             const response = await fetch('./fantasya_cards.json');
             bddCartes = await response.json();
-            creerDeckEtMain();
+            deck = [...bddCartes].sort(() => 0.5 - Math.random());
+            pigerMainInitiale();
         } catch (e) {
-            console.error("Erreur de chargement du JSON. Vérifie le nom du fichier !");
+            alert("Erreur : Assurez-vous que fantasya_cards.json est bien sur votre GitHub !");
         }
     }
 
-    // 2. Création du Deck (Mélange aléatoire)
-    function creerDeckEtMain() {
-        // On mélange et on pioche 7 cartes
-        let deck = [...bddCartes].sort(() => 0.5 - Math.random());
-        mainJoueur = deck.slice(0, 7);
+    function pigerMainInitiale() {
+        mainJoueur = deck.splice(0, 7);
         afficherMain();
     }
 
-    // 3. Affichage visuel
+    function mulligan() {
+        if(!mulliganFait) {
+            // On remet les cartes dans le deck et on remélange
+            deck.push(...mainJoueur);
+            deck.sort(() => 0.5 - Math.random());
+            mainJoueur = deck.splice(0, 7);
+            mulliganFait = true;
+            document.getElementById('btn-mulligan').disabled = true;
+            document.getElementById('btn-mulligan').innerText = "Mulligan utilisé";
+            afficherMain();
+            alert("Mulligan effectué !");
+        }
+    }
+
     function afficherMain() {
         const handDiv = document.getElementById('player-hand');
         handDiv.innerHTML = "";
@@ -73,9 +102,13 @@
             const cardEl = document.createElement('div');
             cardEl.className = `card ${carte.type.toLowerCase()}`;
             cardEl.innerHTML = `
-                <strong>${carte.nom}</strong><br>
-                <small>${carte.type}</small><br><br>
-                <center>💎${carte.cout}</center>
+                <div class="card-header">${carte.nom}</div>
+                <div style="font-size:9px; color:#666">${carte.univers}</div>
+                <div class="card-rules">${carte.regles}</div>
+                <div class="card-footer">
+                    <span>💎 ${carte.cout}</span>
+                    <span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span>
+                </div>
             `;
             cardEl.onclick = () => jouerCarte(index);
             handDiv.appendChild(cardEl);
@@ -84,40 +117,85 @@
 
     function jouerCarte(index) {
         const carte = mainJoueur[index];
+        
         if (imagination >= carte.cout) {
-            imagination -= carte.cout;
-            // Si c'est un perso, on le met sur le terrain
-            if (carte.type === "Personnage") {
-                const board = document.getElementById('game-board');
-                const clone = document.createElement('div');
-                clone.className = "card personnage";
-                clone.innerHTML = `<strong>${carte.nom}</strong><br>⚔️${carte.stats.force} 🛡️${carte.stats.endurance}`;
-                board.appendChild(clone);
+            if (carte.type === "Activité") {
+                if (temps >= 1) {
+                    lancerActivite(carte, index);
+                } else { alert("Pas assez de Temps !"); }
+            } else {
+                imagination -= carte.cout;
+                if (carte.type === "Personnage") poserSurTerrain(carte);
+                mainJoueur.splice(index, 1);
             }
-            
-            mainJoueur.splice(index, 1);
             actualiserStats();
             afficherMain();
-            alert(`Tu as joué ${carte.nom} !`);
         } else {
             alert("Pas assez d'Imagination !");
         }
     }
 
-    function actualiserStats() {
-        document.getElementById('imagination').innerText = imagination;
-        document.getElementById('temps').innerText = temps;
+    function poserSurTerrain(carte) {
+        const board = document.getElementById('game-board');
+        const cardEl = document.createElement('div');
+        cardEl.className = "card personnage";
+        cardEl.innerHTML = `
+            <div class="card-header">${carte.nom}</div>
+            <div class="card-rules" style="font-size:9px">${carte.regles}</div>
+            <div class="card-footer">
+                <span>🛡️ ${carte.stats.endurance}</span>
+                <span>⚔️ ${carte.stats.force}</span>
+            </div>
+        `;
+        board.appendChild(cardEl);
+    }
+
+    function lancerActivite(carte, index) {
+        const persosLibres = document.querySelectorAll('#game-board .card.personnage:not(.occupe)');
+        if (persosLibres.length > 0) {
+            imagination -= carte.cout;
+            temps -= 1;
+            const perso = persosLibres[0];
+            perso.classList.add('occupe');
+            activitesEnAttente.push({ carte: carte, element: perso });
+            mainJoueur.splice(index, 1);
+        } else {
+            alert("Il faut un personnage libre sur le terrain !");
+        }
     }
 
     function finirTour() {
-        imagination = 5; // Reset selon tes règles
+        // Phase de Récupération (Demain)
+        activitesEnAttente.forEach(act => {
+            act.element.classList.remove('occupe');
+            // Simulation simple de gain (à adapter selon les règles de la carte)
+            scoreFantaisie += 5; 
+        });
+        activitesEnAttente = [];
+        
+        // Phase de Pioche
+        if(deck.length > 0) mainJoueur.push(deck.shift());
+
+        // Reset Ressources
+        imagination = 5;
         temps = 3;
+        
         actualiserStats();
-        alert("Nouveau tour ! Ressources rétablies.");
+        afficherMain();
+        alert("Nouveau jour ! +1 carte piochée. Activités complétées.");
+    }
+
+    function actualiserStats() {
+        document.getElementById('imagination').innerText = imagination;
+        document.getElementById('temps').innerText = temps;
+        document.getElementById('fantaisie').innerText = scoreFantaisie;
     }
 
     initialiserJeu();
 </script>
 </body>
+</html>
+</body>
 
 </html>
+
