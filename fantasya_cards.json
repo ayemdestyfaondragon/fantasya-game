@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "0001",
+    "nom": "Ariel",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "J’arrive : Vous pouvez jouez des cartes Objet depuis la défausse ce tour. Comme si vous les avez dans votre mains.",
+    "trigger": "on_arrival",
+    "stats": { "force": 4, "endurance": 1 }
+  },
+  {
+    "id": "0002",
+    "nom": "Au Bout du Rêve",
+    "cout": 5,
+    "type": "Chanson",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Pioche 1 carte par personages Prêt ce tour.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0003",
+    "nom": "Bal dans le Bayou",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Demain : Gagnez 10 Fantaisie Mais passer votre prochainne Phase de préparation.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0004",
+    "nom": "Balade à Dos d’Autruche",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 4 points de Fantaisie. Si vous n’avez plus que 2 Carte en main piochez en jusqu’à en avoir 7.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0005",
+    "nom": "Baloo",
+    "cout": 3,
+    "type": "Personnage",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "J’arrive : Gagnez 5 points de Fantaisie",
+    "trigger": "on_arrival",
+    "stats": { "force": 3, "endurance": 1 }
+  },
+  {
+    "id": "0006",
+    "nom": "Bâton de Rafiki",
+    "cout": 3,
+    "type": "Objet",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Vous pouvez Prendre 1 Personnage de la défausse dans votre main en payant 1 Temps",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0007",
+    "nom": "Bling-Bling",
+    "cout": 6,
+    "type": "Chanson",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque fois qu’un objet est mis dans la défausse ce tour reprenez le puis jouez le gratuitement mais ce dernier n’as pas d’effet ce tour.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0008",
+    "nom": "Boussole de John Smith",
+    "cout": 2,
+    "type": "Objet",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Piocher 1 carte.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0009",
+    "nom": "Branche de l’Ours",
+    "cout": 2,
+    "type": "Objet",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Détruit cette carte pour annullez une destruction puis si une chanson est presente sur le terrain piocher 1 carte.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0010",
+    "nom": "Capitaine de l’armée",
+    "cout": 4,
+    "type": "Rôle",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Désormais : Si le personnage équipé est Prêt ou devient Prêt ce tour il peut faire une activité gratuitement de la défause.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0011",
+    "nom": "Ce rêve bleu",
+    "cout": 4,
+    "type": "Chanson",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Pour 1 Temps échangez une carte de votre main avec celle d’un adversaire.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0012",
+    "nom": "Chapelier Fou",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "J’arrive : tous les joueurs mélange leurs main à la pioche et pioche le même nombre sauf vous qui en piocher 4 de plus.",
+    "trigger": "on_arrival",
+    "stats": { "force": 4, "endurance": 1 }
+  },
+  {
+    "id": "0013",
+    "nom": "Chasse Nocturne",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Demain : Gagné 5 points de Fantaisie et vous permet de regarder la main d’un adversaire.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0014",
+    "nom": "Chasser dans la savane",
+    "cout": 8,
+    "type": "Activité",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 6 points de Fantaisie et détruisez 1 personnage adverse.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0015",
+    "nom": "Chef de Restaurant",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage génère 2 Imagination Chaque fois qu’une Activité est complétée.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0016",
+    "nom": "Chef de Village",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage équipé gagne 2 Temps",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0017",
+    "nom": "Coeur de Te Fiti",
+    "cout": 6,
+    "type": "Objet",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Gagne 3 Temps et pioche 1 carte",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0018",
+    "nom": "Colier de la mère de Pocahontas",
+    "cout": 10,
+    "type": "Objet",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Gagne la somme Imagination + Temps du personnage équipé en points de Fantaisie. (Max.10)",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0019",
+    "nom": "Collectionneuse de trésors",
+    "cout": 2,
+    "type": "Rôle",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage équipé génère 1 point de Fantaisie chaque fois qu’un Objet est joué.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0020",
+    "nom": "Colon Explorateur",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage équipé génére 2 Fantaisie à chaque fois qu’une carte Activité est joué ou préparez.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0021",
+    "nom": "Comme un Homme",
+    "cout": 6,
+    "type": "Chanson",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Vos cartes Rôle coûtent 0 Imagination pour le reste du tour si sa rend le personnage Prêt.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0022",
+    "nom": "Course en forêt",
+    "cout": 6,
+    "type": "Activité",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Demain : Gagne 4 points de Fantaisie. Piochez 2 carte.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0023",
+    "nom": "Croquet Royal",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Demain : Gagnez 10 points de Fantaisie, mais vous devez mélanger votre main dans la pioche après. pour repiocher le même nombre",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0024",
+    "nom": "Cuisine Du Gombo",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 5 points de Fantaisie et Gagne 4 Temps.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0025",
+    "nom": "Dinglehopper (Fourchette)",
+    "cout": 3,
+    "type": "Objet",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Regardez 4 prendre un objet défausez le reste.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0026",
+    "nom": "Dr.Facilier",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "J’arrive : Choississez une carte de la défausse et prenez la en main. Si vous prenez un personnage vous pouvez le joué immédiatement mais il ne rapporte pas d’Imagination ce tour",
+    "trigger": "on_arrival",
+    "stats": { "force": 7, "endurance": 1 }
+  },
+  {
+    "id": "0027",
+    "nom": "Écoute ton coeur",
+    "cout": 3,
+    "type": "Chanson",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Mélodie du jour. A chaque fois que vous avez un duo de carte jouée ce tour. Piocher 1 carte.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0028",
+    "nom": "Entraînement au Camp",
+    "cout": 4,
+    "type": "Activité",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 5 points de Fantaisie et transforme un Personnage en type Guerrier",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0029",
+    "nom": "Épée de Shan Yu",
+    "cout": 4,
+    "type": "Objet",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Aujoud’hui : Choisis un joueur : Il ne peut pas te cibler jusqu’à ton prochain tour OU il défausse 1 carte",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0030",
+    "nom": "Escalade du poteau",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Demain : Gagnez 10 points de Fantaisie. Mais épuissez le Personnage qui à complété cette carte il ne vous apporte aucun effet et ressources .cela dure 2 tour entier.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0031",
+    "nom": "Être un homme comme vous",
+    "cout": 4,
+    "type": "Chanson",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Si vous jouez tous les Types de Carte ce tour cette carte inclus. Gagnez 6 points de Fantasie.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0032",
+    "nom": "Évasion de la Caverne aux Merveilles",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Demain : Gagner 8 Points de Fantaisie. Piochez 2 cartes.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0033",
+    "nom": "Éventail de Mulan",
+    "cout": 3,
+    "type": "Objet",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Pour chaque objet joué ce tour piochez 1 carte .",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0034",
+    "nom": "Exilé du Royaume",
+    "cout": 2,
+    "type": "Rôle",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage équipé ne peut pas être ciblé.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0035",
+    "nom": "Exploration d’épaves",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 7 points de fantaisie et trouver le premier Objet de la pioche défaussez le reste.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0036",
+    "nom": "Exploratrice des Océans",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé génère +1 Fantaisie pour chaque carte Activité complétée.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0037",
+    "nom": "Festival Des Lumières",
+    "cout": 5,
+    "type": "Activité",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 6 points de Fantaisie. Si Flynn Rider est sur le terrain, gagnez 6 Fantaisie supplémentaire",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0038",
+    "nom": "Flynn Rider",
+    "cout": 6,
+    "type": "Personnage",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "J’arrive : Défausser une carte pour gagner son coût d’imagination en Fantaisie",
+    "trigger": "on_arrival",
+    "stats": { "force": 4, "endurance": 1 }
+  },
+  {
+    "id": "0039",
+    "nom": "Garde de la Reine",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé bloque les actions adverse qui le cible.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0040",
+    "nom": "Gardien de la Tour",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé ne peut pas être ciblé par les adversaires.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0041",
+    "nom": "Grand-Mère Feuillage",
+    "cout": 3,
+    "type": "Personnage",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "J’arrive : Gagnez 5 Temps. Ps : Cette carte ne consome pas de temps pour êtres jouée.",
+    "trigger": "on_arrival",
+    "stats": { "force": 0, "endurance": 1 }
+  },
+  {
+    "id": "0042",
+    "nom": "Grande Fleur Rouge (Feu)",
+    "cout": 10,
+    "type": "Objet",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Aujour’hui : Détruisez tous les Objet sur le terrain. Cette carte inclus.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0043",
+    "nom": "Guerrier Impérial",
+    "cout": 6,
+    "type": "Rôle",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage équipé devient de type Guerrier et peut effectuer une Activité immédiament si il est Prêt.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0044",
+    "nom": "Guide de la Forêt",
+    "cout": 6,
+    "type": "Rôle",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé réduit de 1 le coût en temps de toutes vos cartes Objets.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0045",
+    "nom": "Hameçon de Maui",
+    "cout": 6,
+    "type": "Objet",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Le Personnage équipé peut copier l’effet d’une carte sans coût de Temps.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0046",
+    "nom": "Il en faut peu pour être heureux",
+    "cout": 2,
+    "type": "Chanson",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Si tu as 3 cartes ou moins en main : pioche 2 cartes. Sinon : défausse 1 carte.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0047",
+    "nom": "Jafar",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "J’arrive : Prenez le contôle d’un Personnage et ce qui lui est attaché.",
+    "trigger": "on_arrival",
+    "stats": { "force": 6, "endurance": 1 }
+  },
+  {
+    "id": "0048",
+    "nom": "Joyeux Non Annniversaire",
+    "cout": 3,
+    "type": "Chanson",
+    "univers": "Alice au Pays aux Merveilles",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Pour chaque personnage en jeu ou qui arrive ce tour piocher 1 carte.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0049",
+    "nom": "L’air du vent",
+    "cout": 7,
+    "type": "Chanson",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Jusqu’à ton prochain tour, les cartes Objet ne peuvent pas être détruites ou volées. Quand un joueur joue un Objet, Pioche 1 carte.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0050",
+    "nom": "Lanterne des Lumières",
+    "cout": 3,
+    "type": "Objet",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Regardez les 3 première cartes de la pioche prenez en une défausez le reste.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0051",
+    "nom": "Le Cycle de la Vie",
+    "cout": 10,
+    "type": "Chanson",
+    "univers": "Le Roi Lion",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque Activité préparées ce tour double le gain de fantaisie de ces dernières.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0052",
+    "nom": "Le Génie",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "J’arrive : Cherchez 3 cartes dans la pioche ajoutez les à votre main vous pouvez les joué immédiatement mais elles n’auront pas d’effets ce tour.",
+    "trigger": "on_arrival",
+    "stats": { "force": 8, "endurance": 1 }
+  },
+  {
+    "id": "0053",
+    "nom": "Li Shang",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "J’arrive : Pour chaque personnage prêt gagnez 1 point de Fantaisie.",
+    "trigger": "on_arrival",
+    "stats": { "force": 6, "endurance": 1 }
+  },
+  {
+    "id": "0054",
+    "nom": "Livre de cuisine de Tiana",
+    "cout": 8,
+    "type": "Objet",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Vos cartes Activité ne coûtent pas de Temps",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0055",
+    "nom": "Maillet Falmant Rose",
+    "cout": 2,
+    "type": "Objet",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Aujour’hui : Augmentez de 2 les points de Fantaisie rapportés par les Activités",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0056",
+    "nom": "Maître des Ombres",
+    "cout": 3,
+    "type": "Rôle",
+    "univers": "La Princesse etla Grenouille",
+    "rarete": "C",
+    "effet": "Désormais : Le Personnage équipé génère 1 Fantaisie à chaque carte Détruite ou Défausez",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0057",
+    "nom": "Maui",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "J’arrive : Copié l’effet d’une carte sur le terrain",
+    "trigger": "on_arrival",
+    "stats": { "force": 7, "endurance": 1 }
+  },
+  {
+    "id": "0058",
+    "nom": "Meeko",
+    "cout": 7,
+    "type": "Personnage",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "J’arrive : Prenez 3 carte de la défause au hasard.",
+    "trigger": "on_arrival",
+    "stats": { "force": 3, "endurance": 1 }
+  },
+  {
+    "id": "0059",
+    "nom": "Mentor Spirituel",
+    "cout": 10,
+    "type": "Rôle",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Désormais : Double le Gain de Fantaisie des Activité completée par ce personage.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0060",
+    "nom": "Mère Gothel",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "J’arrive : Vos adversaire ne peuve plus joué de Chanson jusqu’à la fin de votre prochain tour.",
+    "trigger": "on_arrival",
+    "stats": { "force": 5, "endurance": 1 }
+  },
+  {
+    "id": "0061",
+    "nom": "Mes Amis de l’Au-delà",
+    "cout": 10,
+    "type": "Chanson",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Piochez 1 carte à chaque fois qu’un personnage entre en jeu sur le terrain. cette Chanson rest active jusqu’au début de votre prochain tour.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0062",
+    "nom": "Montre à Gousset",
+    "cout": 5,
+    "type": "Objet",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Gagne X temps. (X = Temps des personnages)",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0063",
+    "nom": "Mushu",
+    "cout": 3,
+    "type": "Personnage",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "J’arrive : Annonce un type de carte (Objet, Personnage, Chanson, Activité ou Rôle). Révèle la carte du dessus de la pioche. Si c’est le bon type : pioche 2 cartes. Sinon : défausse 1 carte.",
+    "trigger": "on_arrival",
+    "stats": { "force": 4, "endurance": 1 }
+  },
+  {
+    "id": "0064",
+    "nom": "Navigation Astrale",
+    "cout": 8,
+    "type": "Activité",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 6 points de Fantaisie et Regardez 6 et prenez 2 cartes défaussez le reste.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0065",
+    "nom": "N’écoute que moi",
+    "cout": 3,
+    "type": "Chanson",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Pour chaque personnage joué ce tour Piocher 1 carte.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0066",
+    "nom": "Ou est la vraie vie",
+    "cout": 4,
+    "type": "Chanson",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque Activité joué piocher 1 carte",
+    "trigger": "instant"
+  },
+  {
+    "id": "0067",
+    "nom": "Pacte avec la Sorcière",
+    "cout": 8,
+    "type": "Activité",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 10 points de Fantaisie. Aucun joueur ne peut jouer de carte Chanson jusqu’au prochain tour.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0068",
+    "nom": "Pauvres Âmes en Perditions",
+    "cout": 10,
+    "type": "Chanson",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque fois qu’un de vos personnage devient Prêt : Défausé tous les Objets sur le terrain des personnage Prêt",
+    "trigger": "instant"
+  },
+  {
+    "id": "0069",
+    "nom": "Peindre les Roses en Rouge",
+    "cout": 5,
+    "type": "Chanson",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque fois qu’un Objet est équipé Epuisez son porteur il ne rapporte pas ces effet ni ces ressources jusqu’au prochain tour . En contre-parti gagnez 1 Temps et Piochez 1 carte par personnage ainsi épuisé",
+    "trigger": "instant"
+  },
+  {
+    "id": "0070",
+    "nom": "Peinture de Rafiki",
+    "cout": 2,
+    "type": "Objet",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Regardez les 3 premières cartes de la pioche et replacez-les dans l’ordre de votre choix",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0071",
+    "nom": "Peinture murale",
+    "cout": 3,
+    "type": "Activité",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 4 points de fantaisie et piocher une carte",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0072",
+    "nom": "Poêle à frire",
+    "cout": 2,
+    "type": "Objet",
+    "univers": "Raiponce",
+    "rarete": "C",
+    "effet": "Aujour’hui : Bloque la prochaine capacité négative utilisée par un adversaire contre l’un de vos personnages.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0073",
+    "nom": "Pour les Hommes",
+    "cout": 4,
+    "type": "Chanson",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque personnage joué ce tour gagne 2 Fantaisie",
+    "trigger": "instant"
+  },
+  {
+    "id": "0074",
+    "nom": "Prince Ali",
+    "cout": 5,
+    "type": "Chanson",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque personnage different en jeu ou joué ce tour gagnez 2 Fantaisie !",
+    "trigger": "instant"
+  },
+  {
+    "id": "0075",
+    "nom": "Protectrice de la nature",
+    "cout": 6,
+    "type": "Rôle",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé empêche les adversaire de vous faire défausser vos cartes",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0076",
+    "nom": "Réflexion",
+    "cout": 10,
+    "type": "Chanson",
+    "univers": "Mulan",
+    "rarete": "C",
+    "effet": "Mélodie du jour : Pour chaque carte joué ce tour Dupliquez l’effet.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0077",
+    "nom": "Reine de Coeur",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "J’arrive : Détruissez immédiatement un Personnage adverse ce dernier gagne X points de Fantaisie (X = somme d’Imagination et Temps)",
+    "trigger": "on_arrival",
+    "stats": { "force": 5, "endurance": 1 }
+  },
+  {
+    "id": "0078",
+    "nom": "Roi de la terre des Lions",
+    "cout": 4,
+    "type": "Rôle",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé gagne +3 Imagination à chaque début de tour.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0079",
+    "nom": "Roi des Singes",
+    "cout": 7,
+    "type": "Rôle",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé génére 1 Point de Fantaisie chaque fois qu’un adversaire pioche une carte en dehors de la phase de Préparation.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0080",
+    "nom": "Rois des sept Mers",
+    "cout": 4,
+    "type": "Rôle",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé double c’est gain de fantaisie via les cartes Activité qu’il complète.",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0081",
+    "nom": "Saut de la cascade",
+    "cout": 3,
+    "type": "Activité",
+    "univers": "Pocahontas",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 4 points de Fantaisie et Gagne 2 Temps",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0082",
+    "nom": "Scar",
+    "cout": 6,
+    "type": "Personnage",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "J’arrive : Les adversaires défausse X carte au hasard au cumulez. (X = la production d’imagination de cette carte “Scar”)",
+    "trigger": "on_arrival",
+    "stats": { "force": 5, "endurance": 1 }
+  },
+  {
+    "id": "0083",
+    "nom": "Sceptre Serpent",
+    "cout": 4,
+    "type": "Objet",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Forcer un Joueur à révéler sa main jusqu’au début de votre prochain tour .",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0084",
+    "nom": "Sher Khan",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "J’arrive : Détruissez un personnage adverse si ce dernier était prêt piocher 2 carte",
+    "trigger": "on_arrival",
+    "stats": { "force": 7, "endurance": 1 }
+  },
+  {
+    "id": "0085",
+    "nom": "Sieste dans la Jungle",
+    "cout": 3,
+    "type": "Activité",
+    "univers": "Le Livre de la Jungle",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 3 points de Fantaisie et Gagne 3 points de Temps",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0086",
+    "nom": "Simba",
+    "cout": 4,
+    "type": "Personnage",
+    "univers": "Le Roi Lion",
+    "rarete": "C",
+    "effet": "J’arrive : Double la Fantaisie gagnée lors de votre prochainne Activité complétée",
+    "trigger": "on_arrival",
+    "stats": { "force": 3, "endurance": 1 }
+  },
+  {
+    "id": "0087",
+    "nom": "Sous l’Océan",
+    "cout": 4,
+    "type": "Chanson",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque personnage joué ce tour piocher 1 carte",
+    "trigger": "instant"
+  },
+  {
+    "id": "0088",
+    "nom": "Souverain du Pays des Merveilles",
+    "cout": 5,
+    "type": "Rôle",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Desormais: Le personnage équipé peut s’épuissez pour jouer n’importe quelle carte Chanson de la défausse",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0089",
+    "nom": "Soyez Prêtes",
+    "cout": 10,
+    "type": "Chanson",
+    "univers": "Roi Lion",
+    "rarete": "C",
+    "effet": "Mélodie du jour : A chaque fois q’un perssonnage est prêt ce tour : Regadez les 3 premières Cartes de la pioche, Jouez en 1 Gratuitement défaussez le reste.",
+    "trigger": "instant"
+  },
+  {
+    "id": "0090",
+    "nom": "Sultan",
+    "cout": 10,
+    "type": "Rôle",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé divise par 2 le coût en Imagination des cartes que vous jouez",
+    "trigger": "passive_continuous"
+  },
+  {
+    "id": "0091",
+    "nom": "Talisman d’Ombre",
+    "cout": 4,
+    "type": "Objet",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "Aujour’hui : vous pouvez transformer un de vos Personnage en Ombre pour lui permettre d’ignorer les effets adverses. Mais il ne rapporte plus d’imaginations ni de temps ce tour.",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0092",
+    "nom": "Tamatoa",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "J’arrive : Piocher 1 carte par Objet sur votre terrain. Si Hameçon de Maui est en jeu doublé l’effet.",
+    "trigger": "on_arrival",
+    "stats": { "force": 6, "endurance": 1 }
+  },
+  {
+    "id": "0093",
+    "nom": "Tapis volant",
+    "cout": 3,
+    "type": "Objet",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Réduit de 1 le coût de toutes vos activités",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0094",
+    "nom": "Tea Party",
+    "cout": 2,
+    "type": "Activité",
+    "univers": "Alice au Pays des Merveilles",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 4 points de Fantaisie mais défaussez une carte au Hasard",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0095",
+    "nom": "Tiana",
+    "cout": 3,
+    "type": "Personnage",
+    "univers": "La Princesse et la Grenouille",
+    "rarete": "C",
+    "effet": "J’arrive : Si tu as joué au moins 2 cartes ce tour-ci, pioche 3 cartes. Si une carte Chanson est en jeu, l’effet d’arrivée de Tiana ne peut pas être annulé",
+    "trigger": "on_arrival",
+    "stats": { "force": 5, "endurance": 1 }
+  },
+  {
+    "id": "0096",
+    "nom": "Traversé du Récif",
+    "cout": 10,
+    "type": "Activité",
+    "univers": "Vaïana",
+    "rarete": "C",
+    "effet": "Demain : Rapporte 6 points de Fantaisie. Piochez 1 carte pour chaque Personnage sur le terrain.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0097",
+    "nom": "Trident de Triton",
+    "cout": 12,
+    "type": "Objet",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "Aujourd’hui : Stun n’importe quel Personnage sur le terrain il ne fournniras pas ces ressources ni faire d’Activité",
+    "trigger": "activated_ability"
+  },
+  {
+    "id": "0098",
+    "nom": "Ursula",
+    "cout": 5,
+    "type": "Personnage",
+    "univers": "La Petite Sirène",
+    "rarete": "C",
+    "effet": "J’arrive : Choisisez un joueurs ce dernier vous donne un de ces personnage et ce qui lui est équipées",
+    "trigger": "on_arrival",
+    "stats": { "force": 7, "endurance": 1 }
+  },
+  {
+    "id": "0099",
+    "nom": "Vol au Marché",
+    "cout": 8,
+    "type": "Activité",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Demain : Chaque adversaires perd 2 de Fantaisie si il en as. Vous remportez la somme des pertes.",
+    "trigger": "delayed_next_turn"
+  },
+  {
+    "id": "0100",
+    "nom": "Voleur d’Agrabah",
+    "cout": 2,
+    "type": "Rôle",
+    "univers": "Aladin",
+    "rarete": "C",
+    "effet": "Désormais : Le personnage équipé gagne un rabais de 2 sur ces cartes Objet",
+    "trigger": "passive_continuous"
+  }
+]

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fantasya - Le Jeu</title>
+    <style>
+        body { background: #1a1a2e; color: white; font-family: Arial; margin: 0; overflow: hidden; }
+        
+        /* Compteurs en haut */
+        #status-bar { background: #16213e; padding: 10px; display: flex; justify-content: space-around; border-bottom: 2px solid #e94560; }
+        .stat { font-size: 20px; font-weight: bold; }
+        .stat span { color: #e94560; }
+
+        /* Zones de jeu */
+        #game-board { height: 60vh; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; }
+        #player-hand { height: 30vh; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.3); }
+
+        /* Cartes */
+        .card { width: 120px; height: 170px; background: #fff; color: #000; border-radius: 8px; padding: 5px; font-size: 12px; cursor: pointer; transition: transform 0.2s; border: 2px solid #333; }
+        .card:hover { transform: translateY(-20px); border-color: #e94560; }
+        .card.personnage { background: #e1f5fe; }
+        .card.activite { background: #fff9c4; }
+        .card.chanson { background: #f3e5f5; }
+        
+        button { background: #e94560; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="status-bar">
+    <div class="stat">Fantaisie: <span id="fantaisie">0</span>/50</div>
+    <div class="stat">Imagination: <span id="imagination">5</span></div>
+    <div class="stat">Temps: <span id="temps">3</span></div>
+    <button onclick="finirTour()">Finir le Tour</button>
+</div>
+
+<div id="game-board">
+    </div>
+
+<div id="player-hand">
+    </div>
+
+<script>
+    // 1. On charge la base de données (Fais bien attention que fantasya_cards.json soit dans le même dossier)
+    let bddCartes = [];
+    let mainJoueur = [];
+    let imagination = 5;
+    let temps = 3;
+
+    async function initialiserJeu() {
+        try {
+            const response = await fetch('fantasya_cards.json');
+            bddCartes = await response.json();
+            creerDeckEtMain();
+        } catch (e) {
+            console.error("Erreur de chargement du JSON. Vérifie le nom du fichier !");
+        }
+    }
+
+    // 2. Création du Deck (Mélange aléatoire)
+    function creerDeckEtMain() {
+        // On mélange et on pioche 7 cartes
+        let deck = [...bddCartes].sort(() => 0.5 - Math.random());
+        mainJoueur = deck.slice(0, 7);
+        afficherMain();
+    }
+
+    // 3. Affichage visuel
+    function afficherMain() {
+        const handDiv = document.getElementById('player-hand');
+        handDiv.innerHTML = "";
+        mainJoueur.forEach((carte, index) => {
+            const cardEl = document.createElement('div');
+            cardEl.className = `card ${carte.type.toLowerCase()}`;
+            cardEl.innerHTML = `
+                <strong>${carte.nom}</strong><br>
+                <small>${carte.type}</small><br><br>
+                <center>💎${carte.cout}</center>
+            `;
+            cardEl.onclick = () => jouerCarte(index);
+            handDiv.appendChild(cardEl);
+        });
+    }
+
+    function jouerCarte(index) {
+        const carte = mainJoueur[index];
+        if (imagination >= carte.cout) {
+            imagination -= carte.cout;
+            // Si c'est un perso, on le met sur le terrain
+            if (carte.type === "Personnage") {
+                const board = document.getElementById('game-board');
+                const clone = document.createElement('div');
+                clone.className = "card personnage";
+                clone.innerHTML = `<strong>${carte.nom}</strong><br>⚔️${carte.stats.force} 🛡️${carte.stats.endurance}`;
+                board.appendChild(clone);
+            }
+            
+            mainJoueur.splice(index, 1);
+            actualiserStats();
+            afficherMain();
+            alert(`Tu as joué ${carte.nom} !`);
+        } else {
+            alert("Pas assez d'Imagination !");
+        }
+    }
+
+    function actualiserStats() {
+        document.getElementById('imagination').innerText = imagination;
+        document.getElementById('temps').innerText = temps;
+    }
+
+    function finirTour() {
+        imagination = 5; // Reset selon tes règles
+        temps = 3;
+        actualiserStats();
+        alert("Nouveau tour ! Ressources rétablies.");
+    }
+
+    initialiserJeu();
+</script>
+</body>
+</html>
