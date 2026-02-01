@@ -87,17 +87,19 @@
     }
 
     function genererHTMLCarte(carte) {
-        return `
-            <div class="card-header">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.nom}.png" onerror="this.src='https://via.placeholder.com/130x70?text=Image+Manquante'">
-            <div style="font-size:8px; color:gray; text-align:center">${carte.univers}</div>
-            <div class="card-rules">${carte.regles}</div>
-            <div class="card-footer">
-                <span>💎 ${carte.cout}</span>
-                <span>${carte.stats ? '⚔️'+carte.stats.force+' 🛡️'+carte.stats.endurance : ''}</span>
-            </div>
-        `;
-    }
+    return `
+        <div class="card-header">${carte.nom}</div>
+        
+        <img class="card-img" src="./images/${carte.id}.png" onerror="this.src='https://via.placeholder.com/130x70?text=Image+Manquante'">
+        
+        <div style="font-size:8px; color:gray; text-align:center">${carte.univers}</div>
+        <div class="card-rules">${carte.regles}</div>
+        <div class="card-footer">
+            <span>💎 ${carte.cout}</span>
+            <span>${carte.stats ? '⚔️'+carte.stats.force+' 🛡️'+carte.stats.endurance : ''}</span>
+        </div>
+    `;
+}
 
     function afficherMain() {
         const handDiv = document.getElementById('player-hand');
@@ -177,3 +179,4 @@
 </script>
 </body>
 </html>
+
