@@ -33,6 +33,26 @@
         #discard-pile { position: fixed; bottom: 20px; right: 20px; width: 80px; height: 110px; background: rgba(255, 255, 255, 0.1); border: 2px solid #e94560; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #e94560; font-size: 10px; text-align: center; }
         #victory-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; }
         button { background: #e94560; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        /* Zone spécifique pour les objets posés */
+        #object-zone {
+        position: fixed;
+        left: 10px;
+        top: 100px;
+        width: 140px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+}
+
+        .card.objet {
+        border-color: #4caf50 !important;
+        background: #f1fff2 !important;
+        height: 120px; /* Plus petits une fois posés */
+        width: 90px;
+        font-size: 9px;
+}
+
+        .card.objet .card-img { height: 40px; }
     </style>
 </head>
 <body>
@@ -50,7 +70,7 @@
     <button id="btn-mulligan" onclick="mulligan()">Mulligan</button>
     <button onclick="finirTour()">Dormir</button>
 </div>
-
+<div id="object-zone"></div>
 <div id="game-board"></div>
 <div id="player-hand"></div>
 <div id="discard-pile" onclick="defausserManuelle()">Défausse<br>(Cliquez)</div>
@@ -107,6 +127,28 @@
                     lancerActivite(carte);
                 } else { imagination += carte.cout; alert("Plus de Temps !"); return; }
             }
+            // Dans jouerCarte, ajoute ce bloc :
+            else if (carte.type === "Objet") {
+                poserObjet(carte);
+}
+
+    // Nouvelle fonction pour les objets
+    function poserObjet(carte) {
+        const zone = document.getElementById('object-zone');
+        const cardEl = document.createElement('div');
+        cardEl.className = "card objet";
+        cardEl.innerHTML = `
+            <div class="card-header" style="font-size:8px">${carte.nom}</div>
+            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
+            <div class="card-rules" style="font-size:7px">${carte.regles}</div>
+    `;
+        zone.appendChild(cardEl);
+    
+    // Effet immédiat ou permanent selon l'ID
+        if(carte.id === "0036") { // Exemple : Miroir Magique
+        alert("Objet activé : Vous piocherez +1 carte à chaque tour !");
+    }
+}
             mainJoueur.splice(index, 1);
             actualiserStats();
             afficherMain();
@@ -155,9 +197,23 @@
         if (mainJoueur.length > 10) mainJoueur.splice(0, mainJoueur.length - 10);
         
         temps = 3;
-        actualiserStats();
-        afficherMain();
-    }
+        // Calcul bonus des Objets
+    const objetsPoses = document.querySelectorAll('#object-zone .card.objet');
+    let bonusPioche = 1; // 1 de base
+
+    objetsPoses.forEach(obj => {
+        // Si tu as le Miroir Magique (ID 0036) par exemple
+        if (obj.innerHTML.includes("0036")) bonusPioche += 1;
+    });
+
+    // On pioche selon le nombre d'objets
+    piger(bonusPioche);
+    
+    // ... reset ressources et stats ...
+    alert(`Matin : Vous avez pioché ${bonusPioche} carte(s) grâce à vos objets.`);
+    actualiserStats();
+    afficherMain();
+}
 
     function mulligan() {
         if(!mulliganFait) {
@@ -202,3 +258,4 @@
 </script>
 </body>
 </html>
+
