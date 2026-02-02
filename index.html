@@ -6,60 +6,48 @@
     <style>
         body { background: #1a1a2e; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
         
-        #status-bar { background: #16213e; padding: 15px; display: flex; justify-content: space-around; align-items: center; border-bottom: 3px solid #e94560; }
-        .stat { font-size: 16px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; }
-        .stat span { color: #e94560; font-size: 20px; }
+        #status-bar { background: #16213e; padding: 10px; display: flex; justify-content: space-around; align-items: center; border-bottom: 3px solid #e94560; }
+        .stat { font-size: 14px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; }
+        .stat span { color: #e94560; font-size: 18px; }
 
-        #game-board { height: 50vh; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; overflow-y: auto; }
-        #player-hand { height: 35vh; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.4); border-top: 2px solid #444; overflow-x: auto; }
+        /* Zones de jeu */
+        #main-container { display: flex; height: 85vh; }
+        #object-zone { width: 150px; background: rgba(0,0,0,0.2); border-right: 1px solid #444; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 10px; overflow-y: auto; }
+        #game-board { flex-grow: 1; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; overflow-y: auto; }
+        #player-hand { height: 30vh; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.4); border-top: 2px solid #444; overflow-x: auto; }
 
-        .card { width: 120px; height: 170px; background: white; color: #333; border-radius: 10px; padding: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s; border: 3px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
-        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 15px #ffd700; transform: translateY(-10px); }
+        /* Cartes */
+        .card { width: 110px; height: 160px; background: white; color: #333; border-radius: 8px; padding: 6px; font-size: 10px; cursor: pointer; transition: all 0.3s; border: 3px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
+        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 15px #ffd700; transform: translateY(-5px); }
         
         .card.personnage { border-color: #2196f3; }
         .card.activité { border-color: #ff9800; }
         .card.chanson { border-color: #9c27b0; background: #fdf0ff; }
-        .card.objet { border-color: #4caf50; }
+        .card.objet { border-color: #4caf50; height: 130px; width: 90px; }
 
-        .card-header { font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 3px; font-size: 10px; text-align: center; color: #000; min-height: 25px; }
-        .card-img { width: 100%; height: 60px; background: #eee; border-radius: 4px; object-fit: cover; margin-bottom: 3px; }
-        .card-rules { flex-grow: 1; font-size: 8px; line-height: 1.1; overflow: hidden; color: #444; }
-        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; }
+        .card-header { font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 3px; text-align: center; color: #000; height: 25px; overflow: hidden; }
+        .card-img { width: 100%; height: 55px; background: #eee; border-radius: 4px; object-fit: cover; }
+        .card-rules { flex-grow: 1; font-size: 8px; line-height: 1; overflow: hidden; margin-top: 3px; }
+        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 10px; }
 
         .occupe { opacity: 0.6; filter: grayscale(100%); border: 3px dashed #ff9800 !important; }
-        .note-musique { position: fixed; color: #9c27b0; font-size: 24px; pointer-events: none; z-index: 2000; animation: envoler 2s ease-out forwards; }
+        
+        /* Animations */
+        .note-musique { position: fixed; color: #9c27b0; font-size: 24px; pointer-events: none; z-index: 2000; animation: envoler 2s forwards; }
         @keyframes envoler { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-200px); opacity: 0; } }
+        .shake { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
 
-        #discard-pile { position: fixed; bottom: 20px; right: 20px; width: 80px; height: 110px; background: rgba(255, 255, 255, 0.1); border: 2px solid #e94560; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #e94560; font-size: 10px; text-align: center; }
-        #victory-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; }
-        button { background: #e94560; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        /* Zone spécifique pour les objets posés */
-        #object-zone {
-        position: fixed;
-        left: 10px;
-        top: 100px;
-        width: 140px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-}
-
-        .card.objet {
-        border-color: #4caf50 !important;
-        background: #f1fff2 !important;
-        height: 120px; /* Plus petits une fois posés */
-        width: 90px;
-        font-size: 9px;
-}
-
-        .card.objet .card-img { height: 40px; }
+        #discard-pile { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 100px; border: 2px dashed #e94560; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #e94560; font-size: 10px; cursor: pointer; background: rgba(0,0,0,0.3); }
+        #victory-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; flex-direction: column; justify-content: center; align-items: center; }
+        button { background: #e94560; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="victory-screen">
-    <h1 style="color: #ffd700;">VICTOIRE !</h1>
-    <button onclick="location.reload()">Rejouer</button>
+    <h1 style="color: #ffd700; font-size: 50px;">VICTOIRE !</h1>
+    <button onclick="location.reload()">Recommencer</button>
 </div>
 
 <div id="status-bar">
@@ -67,43 +55,54 @@
     <div class="stat">Fantaisie: <span id="fantaisie">0</span>/50</div>
     <div class="stat">Imagination: <span id="imagination">5</span></div>
     <div class="stat">Temps: <span id="temps">3</span></div>
-    <button id="btn-mulligan" onclick="mulligan()">Mulligan</button>
-    <button onclick="finirTour()">Dormir</button>
+    <button onclick="mulligan()" id="btn-mulligan">Mulligan</button>
+    <button onclick="finirTour()">Finir le Tour</button>
 </div>
-<div id="object-zone"></div>
-<div id="game-board"></div>
+
+<div id="main-container">
+    <div id="object-zone">
+        <div style="font-size: 10px; color: #4caf50; font-weight: bold;">OBJETS</div>
+    </div>
+    <div id="game-board"></div>
+</div>
+
 <div id="player-hand"></div>
-<div id="discard-pile" onclick="defausserManuelle()">Défausse<br>(Cliquez)</div>
+<div id="discard-pile" onclick="defausserManuelle()">🗑️<br>DÉFAUSSE</div>
 
 <script>
-    let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [], pileDefausse = [];
+    let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [], objetsActifs = [];
     let imagination = 5, temps = 3, scoreFantaisie = 0, mulliganFait = false;
-    let objetsActifs = [];
+
     async function initialiserJeu() {
         try {
             const response = await fetch('./fantasya_cards.json');
+            if (!response.ok) throw new Error("Fichier JSON non trouvé");
             bddCartes = await response.json();
             deck = [...bddCartes].sort(() => 0.5 - Math.random());
             mainJoueur = deck.splice(0, 7);
             actualiserStats();
             afficherMain();
-        } catch (e) { alert("Erreur de chargement du fichier JSON !"); }
+        } catch (e) {
+            console.error(e);
+            alert("Erreur critique : fantasya_cards.json est introuvable sur GitHub !");
+        }
     }
 
     function afficherMain() {
         const handDiv = document.getElementById('player-hand');
+        if (!handDiv) return;
         handDiv.innerHTML = "";
         mainJoueur.forEach((carte, index) => {
             const cardEl = document.createElement('div');
-            const estJouable = imagination >= carte.cout ? "jouable" : "";
+            const estJouable = imagination >= (carte.cout || 0) ? "jouable" : "";
             cardEl.className = `card ${carte.type.toLowerCase()} ${estJouable}`;
             cardEl.innerHTML = `
                 <div class="card-header">${carte.nom}</div>
-                <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
+                <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.opacity='0.3'">
                 <div class="card-rules">${carte.regles}</div>
                 <div class="card-footer">
                     <span>💎 ${carte.cout}</span>
-                    <span>${carte.stats ? '⚔️'+carte.stats.force : '✨'}</span>
+                    <span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span>
                 </div>
             `;
             cardEl.onclick = () => jouerCarte(index);
@@ -115,41 +114,19 @@
         const carte = mainJoueur[index];
         if (imagination >= carte.cout) {
             imagination -= carte.cout;
+            
             if (carte.type === "Personnage") {
                 poserSurTerrain(carte);
-                appliquerEffet(carte);
+            } else if (carte.type === "Objet") {
+                poserObjet(carte);
             } else if (carte.type === "Chanson") {
                 effetMusique();
-                appliquerEffet(carte);
-                pileDefausse.push(carte);
+                appliquerEffetImmediat(carte);
             } else if (carte.type === "Activité") {
-                if (temps >= 1) {
-                    lancerActivite(carte);
-                } else { imagination += carte.cout; alert("Plus de Temps !"); return; }
+                if (temps >= 1) lancerActivite(carte);
+                else { imagination += carte.cout; alert("Pas assez de temps !"); return; }
             }
-            // Dans jouerCarte, ajoute ce bloc :
-            else if (carte.type === "Objet") {
-                poserObjet(carte);
-}
 
-    // Nouvelle fonction pour les objets
-   function poserObjet(carte) {
-    const zone = document.getElementById('object-zone');
-    const cardEl = document.createElement('div');
-    cardEl.className = "card objet";
-    cardEl.dataset.id = carte.id; // On stocke l'ID dans l'élément HTML
-    
-    cardEl.innerHTML = `
-        <div class="card-header" style="font-size:8px">${carte.nom}</div>
-        <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
-        <div class="card-rules" style="font-size:7px">${carte.regles}</div>
-    `;
-    zone.appendChild(cardEl);
-    objetsActifs.push(carte.id);
-    
-    // Effet immédiat à la pose
-    if(carte.id === "0059") alert("La Lampe Magique est posée ! Vos vœux vont s'exaucer...");
-}
             mainJoueur.splice(index, 1);
             actualiserStats();
             afficherMain();
@@ -160,8 +137,26 @@
         const board = document.getElementById('game-board');
         const cardEl = document.createElement('div');
         cardEl.className = "card personnage";
-        cardEl.innerHTML = `<div class="card-header">${carte.nom}</div><div class="card-footer">🛡️ ${carte.stats.endurance}</div>`;
+        cardEl.dataset.force = carte.stats ? carte.stats.force : 0;
+        cardEl.innerHTML = `
+            <div class="card-header">${carte.nom}</div>
+            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.opacity='0.3'">
+            <div class="card-footer">🛡️ ${carte.stats ? carte.stats.endurance : '?'}</div>
+        `;
         board.appendChild(cardEl);
+    }
+
+    function poserObjet(carte) {
+        const zone = document.getElementById('object-zone');
+        const cardEl = document.createElement('div');
+        cardEl.className = "card objet";
+        cardEl.dataset.id = carte.id;
+        cardEl.innerHTML = `
+            <div class="card-header">${carte.nom}</div>
+            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.opacity='0.3'">
+        `;
+        zone.appendChild(cardEl);
+        objetsActifs.push(carte.id);
     }
 
     function lancerActivite(carte) {
@@ -173,63 +168,52 @@
         } else { imagination += carte.cout; alert("Aucun personnage disponible !"); }
     }
 
-    function appliquerEffet(carte) {
-        switch(carte.id) {
-            case "0005": scoreFantaisie += 5; break; 
-            case "0041": temps += 2; break;
-            case "0002": imagination += 3; break;
-        }
+    function appliquerEffetImmediat(carte) {
+        if (carte.id === "0002") imagination += 3;
+        if (carte.id === "0016") piger(2);
+        alert(`Effet activé : ${carte.nom}`);
     }
 
-  function finirTour() {
-    let bonusPioche = 1;
-    let bonusImagination = 0;
-    let bonusTemps = 0;
-    let bonusFantaisie = 0;
+    function piger(nb) {
+        for(let i=0; i<nb; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
+    }
 
-    // 1. Calcul des bonus des objets actifs
-    objetsActifs.forEach(id => {
-        if (id === "0059") bonusImagination += 2; // Lampe
-        if (id === "0097") bonusFantaisie += 5;   // Trident
-        if (id === "0036") bonusPioche += 1;      // Miroir
-        if (id === "0021") bonusTemps += 1;       // Coquillage
-    });
+    function finirTour() {
+        // 1. Gain activités
+        activitesEnAttente.forEach(act => {
+            scoreFantaisie += 7;
+            act.element.classList.remove('occupe');
+        });
+        activitesEnAttente = [];
 
-    // 2. Résolution des activités (ton code existant)
-    activitesEnAttente.forEach(act => {
-        scoreFantaisie += 8;
-        act.element.classList.remove('occupe');
-    });
-    activitesEnAttente = [];
+        // 2. Bonus objets (Secousse visuelle)
+        let bonusP = 1, bonusI = 0, bonusT = 0;
+        objetsActifs.forEach(id => {
+            const el = document.querySelector(`.card.objet[data-id="${id}"]`);
+            if(el) el.classList.add('shake');
+            setTimeout(() => el && el.classList.remove('shake'), 500);
 
-    // 3. Application des bonus
-    scoreFantaisie += bonusFantaisie;
-    piger(bonusPioche);
-    
-    // 4. Reset Ressources (Base + Bonus)
-    const persos = document.querySelectorAll('#game-board .card.personnage');
-    imagination = 5 + persos.length + bonusImagination;
-    temps = 3 + bonusTemps;
+            if (id === "0059") bonusI += 2; // Lampe
+            if (id === "0036") bonusP += 1; // Miroir
+            if (id === "0021") bonusT += 1; // Coquillage
+        });
 
-    // 5. Nettoyage main
-    if (mainJoueur.length > 10) mainJoueur.splice(0, mainJoueur.length - 10);
-    
-    actualiserStats();
-    afficherMain();
+        // 3. Calcul Imagination (Base 5 + Force Persos + Objets)
+        let forceTotale = 0;
+        document.querySelectorAll('#game-board .card.personnage').forEach(p => {
+            forceTotale += parseInt(p.dataset.force || 0);
+        });
 
-    // Petit rapport de début de journée
-    let rapport = "Le soleil se lève !";
-    if (bonusImagination > 0 || bonusTemps > 0) rapport += `\nVos objets vous ont aidé !`;
-    alert(rapport);
-}
-    // On pioche selon le nombre d'objets
-    piger(bonusPioche);
-    
-    // ... reset ressources et stats ...
-    alert(`Matin : Vous avez pioché ${bonusPioche} carte(s) grâce à vos objets.`);
-    actualiserStats();
-    afficherMain();
-}
+        imagination = 5 + forceTotale + bonusI;
+        temps = 3 + bonusT;
+        piger(bonusP);
+
+        // Limite de main
+        if (mainJoueur.length > 10) mainJoueur = mainJoueur.slice(-10);
+
+        actualiserStats();
+        afficherMain();
+    }
 
     function mulligan() {
         if(!mulliganFait) {
@@ -244,14 +228,13 @@
 
     function defausserManuelle() {
         if(mainJoueur.length > 0) {
-            pileDefausse.push(mainJoueur.pop());
+            mainJoueur.pop();
             afficherMain();
-            actualiserStats();
         }
     }
 
     function effetMusique() {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 8; i++) {
             const n = document.createElement('div');
             n.className = 'note-musique';
             n.innerText = "♪";
@@ -274,5 +257,3 @@
 </script>
 </body>
 </html>
-
-
