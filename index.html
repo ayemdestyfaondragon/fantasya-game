@@ -122,7 +122,8 @@
             imagination -= carte.cout;
             if (carte.type === "Personnage") poserSurTerrain(carte);
             else if (carte.type === "Objet") poserObjet(carte);
-            else if (carte.type === "Chanson") { appliquerEffetChanson(carte); // <--- Vérifie bien que ce nom de fonction est identique
+            else if (carte.type === "Chanson") {
+    appliquerEffetChanson(carte);
 }
             else if (carte.type === "Activité") {
                 if (temps >= 1) lancerActivite(carte);
@@ -169,10 +170,10 @@
         } else { imagination += carte.cout; alert("Aucun perso disponible !"); }
     }
 function appliquerEffetChanson(carte) {
-    // On déclenche l'effet visuel des notes
+    // Déclenche l'animation visuelle
     effetMusique();
 
-    // Logique selon l'ID de la chanson
+    // Logique basée sur l'ID de la carte (fantasya_cards.json)
     switch(carte.id) {
         case "0002": // Au Bout du Rêve
             imagination += 3;
@@ -183,8 +184,8 @@ function appliquerEffetChanson(carte) {
             alert("♫ Ce Rêve Bleu : Vous piochez 2 cartes !");
             break;
         case "0040": // Libérée, Délivrée
-            temps = 3;
-            alert("♫ Libérée, Délivrée : Votre Temps est réinitialisé !");
+            temps = 3; 
+            alert("♫ Libérée, Délivrée : Temps réinitialisé !");
             break;
         case "0050": // Je suis ton ami
             const nbPersos = document.querySelectorAll('#game-board .card.personnage').length;
@@ -197,7 +198,7 @@ function appliquerEffetChanson(carte) {
             alert(`♫ Sous l'Océan : +${nbAct} cartes piochées !`);
             break;
         default:
-            // Si l'ID n'est pas codé, on donne un petit bonus par défaut pour pas que ce soit inutile
+            // Bonus par défaut si l'ID n'est pas encore programmé
             scoreFantaisie += 2;
             alert(`♫ Vous chantez ${carte.nom} : +2 Fantaisie !`);
     }
@@ -247,11 +248,9 @@ function appliquerEffetChanson(carte) {
         if(mainJoueur.length > 0) { mainJoueur.pop(); afficherMain(); }
     }
     
-    function piger(nb) {
+function piger(nb) {
     for(let i=0; i<nb; i++) {
-        if(deck.length > 0) {
-            mainJoueur.push(deck.shift());
-        }
+        if(deck.length > 0) mainJoueur.push(deck.shift());
     }
     afficherMain();
 }
@@ -267,4 +266,5 @@ function appliquerEffetChanson(carte) {
 </script>
 </body>
 </html>
+
 
