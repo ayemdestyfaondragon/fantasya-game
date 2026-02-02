@@ -2,72 +2,83 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Fantasya - Le Jeu Officiel</title>
+    <title>Fantasya - Plateau de Jeu</title>
     <style>
-        body { background: #1a1a2e; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
+        /* 1. RESET ET BASES - On bloque le scroll pour tout voir d'un coup */
+        body { background: #1a1a2e; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        #status-bar { background: #16213e; padding: 10px; display: flex; justify-content: space-around; align-items: center; border-bottom: 3px solid #e94560; }
-        .stat { font-size: 14px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; }
+        /* 2. BARRE DE STATS - Plus compacte */
+        #status-bar { background: #16213e; padding: 8px; display: flex; justify-content: space-around; align-items: center; border-bottom: 2px solid #e94560; flex-shrink: 0; }
+        .stat { font-size: 14px; font-weight: bold; }
         .stat span { color: #e94560; font-size: 18px; }
 
-        /* Zones de jeu */
-        #main-container { display: flex; height: 85vh; }
-        #object-zone { width: 150px; background: rgba(0,0,0,0.2); border-right: 1px solid #444; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 10px; overflow-y: auto; }
-        #game-board { flex-grow: 1; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; overflow-y: auto; }
-        #player-hand { height: 30vh; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.4); border-top: 2px solid #444; overflow-x: auto; }
+        /* 3. STRUCTURE DU PLATEAU - On utilise flex-grow pour remplir l'espace */
+        #main-layout { display: flex; flex-grow: 1; overflow: hidden; }
+        
+        /* Zone Objets à gauche */
+        #object-zone { width: 120px; background: rgba(0,0,0,0.3); border-right: 1px solid #444; padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        
+        /* Zone de combat au centre */
+        #game-board { flex-grow: 1; display: flex; align-content: center; justify-content: center; gap: 10px; padding: 10px; flex-wrap: wrap; overflow-y: auto; background: radial-gradient(circle, #1b1b3a 0%, #1a1a2e 100%); }
 
-        /* Cartes */
-        .card { width: 110px; height: 160px; background: white; color: #333; border-radius: 8px; padding: 6px; font-size: 10px; cursor: pointer; transition: all 0.3s; border: 3px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
-        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 15px #ffd700; transform: translateY(-5px); }
+        /* 4. LA MAIN - Fixée en bas */
+        #player-hand { height: 25vh; background: rgba(0,0,0,0.5); border-top: 2px solid #444; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 5px 10px; overflow-x: auto; flex-shrink: 0; }
+
+        /* 5. LES CARTES - On réduit la taille pour que ça respire */
+        .card { width: 100px; height: 145px; background: white; color: #333; border-radius: 6px; padding: 5px; font-size: 9px; cursor: pointer; transition: 0.2s; border: 2px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
+        .card:hover { transform: translateY(-10px); z-index: 10; }
+        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 10px #ffd700; }
         
         .card.personnage { border-color: #2196f3; }
         .card.activité { border-color: #ff9800; }
-        .card.chanson { border-color: #9c27b0; background: #fdf0ff; }
-        .card.objet { border-color: #4caf50; height: 130px; width: 90px; }
+        .card.chanson { border-color: #9c27b0; }
+        .card.objet { border-color: #4caf50; height: 110px; width: 80px; } /* Objets plus petits */
 
-        .card-header { font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 3px; text-align: center; color: #000; height: 25px; overflow: hidden; }
-        .card-img { width: 100%; height: 55px; background: #eee; border-radius: 4px; object-fit: cover; }
-        .card-rules { flex-grow: 1; font-size: 8px; line-height: 1; overflow: hidden; margin-top: 3px; }
-        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 10px; }
+        .card-header { font-weight: bold; border-bottom: 1px solid #ddd; margin-bottom: 3px; height: 22px; overflow: hidden; text-align: center; line-height: 1; }
+        .card-img { width: 100%; height: 50px; background: #eee; border-radius: 3px; object-fit: cover; }
+        .card-rules { flex-grow: 1; font-size: 8px; line-height: 1; margin-top: 3px; overflow: hidden; }
+        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 9px; margin-top: 2px; }
 
-        .occupe { opacity: 0.6; filter: grayscale(100%); border: 3px dashed #ff9800 !important; }
+        .occupe { opacity: 0.5; filter: grayscale(100%); border: 2px dashed #ff9800 !important; }
+        .occupe::after { content: "💤"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; }
+
+        /* Défausse compacte */
+        #discard-pile { position: fixed; bottom: 10px; right: 10px; width: 60px; height: 85px; border: 2px dashed #e94560; border-radius: 5px; background: rgba(0,0,0,0.4); color: #e94560; font-size: 9px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; z-index: 100; }
+
+        button { background: #e94560; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        button:hover { background: #ff5e78; }
         
-        /* Animations */
-        .note-musique { position: fixed; color: #9c27b0; font-size: 24px; pointer-events: none; z-index: 2000; animation: envoler 2s forwards; }
-        @keyframes envoler { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-200px); opacity: 0; } }
-        .shake { animation: shake 0.5s; }
-        @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
-
-        #discard-pile { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 100px; border: 2px dashed #e94560; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #e94560; font-size: 10px; cursor: pointer; background: rgba(0,0,0,0.3); }
-        #victory-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; flex-direction: column; justify-content: center; align-items: center; }
-        button { background: #e94560; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #victory-screen { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
 <div id="victory-screen">
-    <h1 style="color: #ffd700; font-size: 50px;">VICTOIRE !</h1>
-    <button onclick="location.reload()">Recommencer</button>
+    <h1 style="color: #ffd700; font-size: 40px;">VICTOIRE !</h1>
+    <button onclick="location.reload()">REJOUER</button>
 </div>
 
 <div id="status-bar">
-    <div class="stat">Pioche: <span id="deck-count">0</span></div>
-    <div class="stat">Fantaisie: <span id="fantaisie">0</span>/50</div>
-    <div class="stat">Imagination: <span id="imagination">5</span></div>
-    <div class="stat">Temps: <span id="temps">3</span></div>
+    <div class="stat">🃏 Deck: <span id="deck-count">0</span></div>
+    <div class="stat">✨ Fantaisie: <span id="fantaisie">0</span>/50</div>
+    <div class="stat">💎 Imagination: <span id="imagination">5</span></div>
+    <div class="stat">⏳ Temps: <span id="temps">3</span></div>
     <button onclick="mulligan()" id="btn-mulligan">Mulligan</button>
-    <button onclick="finirTour()">Finir le Tour</button>
+    <button onclick="finirTour()">Finir le tour</button>
 </div>
 
-<div id="main-container">
+<div id="main-layout">
     <div id="object-zone">
-        <div style="font-size: 10px; color: #4caf50; font-weight: bold;">OBJETS</div>
+        <div style="font-size: 10px; color: #4caf50; text-align: center; border-bottom: 1px solid #4caf50; margin-bottom: 5px;">OBJETS</div>
     </div>
-    <div id="game-board"></div>
+    <div id="game-board">
+        </div>
 </div>
 
-<div id="player-hand"></div>
-<div id="discard-pile" onclick="defausserManuelle()">🗑️<br>DÉFAUSSE</div>
+<div id="player-hand">
+    </div>
+
+<div id="discard-pile" onclick="defausserManuelle()">🗑️<br>JETER</div>
 
 <script>
     let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [], objetsActifs = [];
@@ -76,21 +87,16 @@
     async function initialiserJeu() {
         try {
             const response = await fetch('./fantasya_cards.json');
-            if (!response.ok) throw new Error("Fichier JSON non trouvé");
             bddCartes = await response.json();
             deck = [...bddCartes].sort(() => 0.5 - Math.random());
             mainJoueur = deck.splice(0, 7);
             actualiserStats();
             afficherMain();
-        } catch (e) {
-            console.error(e);
-            alert("Erreur critique : fantasya_cards.json est introuvable sur GitHub !");
-        }
+        } catch (e) { alert("Erreur : Fichier JSON introuvable !"); }
     }
 
     function afficherMain() {
         const handDiv = document.getElementById('player-hand');
-        if (!handDiv) return;
         handDiv.innerHTML = "";
         mainJoueur.forEach((carte, index) => {
             const cardEl = document.createElement('div');
@@ -98,7 +104,7 @@
             cardEl.className = `card ${carte.type.toLowerCase()} ${estJouable}`;
             cardEl.innerHTML = `
                 <div class="card-header">${carte.nom}</div>
-                <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.opacity='0.3'">
+                <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
                 <div class="card-rules">${carte.regles}</div>
                 <div class="card-footer">
                     <span>💎 ${carte.cout}</span>
@@ -114,19 +120,13 @@
         const carte = mainJoueur[index];
         if (imagination >= carte.cout) {
             imagination -= carte.cout;
-            
-            if (carte.type === "Personnage") {
-                poserSurTerrain(carte);
-            } else if (carte.type === "Objet") {
-                poserObjet(carte);
-            } else if (carte.type === "Chanson") {
-                effetMusique();
-                appliquerEffetImmediat(carte);
-            } else if (carte.type === "Activité") {
+            if (carte.type === "Personnage") poserSurTerrain(carte);
+            else if (carte.type === "Objet") poserObjet(carte);
+            else if (carte.type === "Chanson") appliquerEffetChanson(carte);
+            else if (carte.type === "Activité") {
                 if (temps >= 1) lancerActivite(carte);
-                else { imagination += carte.cout; alert("Pas assez de temps !"); return; }
+                else { imagination += carte.cout; alert("Pas de Temps !"); return; }
             }
-
             mainJoueur.splice(index, 1);
             actualiserStats();
             afficherMain();
@@ -140,7 +140,7 @@
         cardEl.dataset.force = carte.stats ? carte.stats.force : 0;
         cardEl.innerHTML = `
             <div class="card-header">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.opacity='0.3'">
+            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
             <div class="card-footer">🛡️ ${carte.stats ? carte.stats.endurance : '?'}</div>
         `;
         board.appendChild(cardEl);
@@ -152,8 +152,8 @@
         cardEl.className = "card objet";
         cardEl.dataset.id = carte.id;
         cardEl.innerHTML = `
-            <div class="card-header">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.opacity='0.3'">
+            <div class="card-header" style="font-size:7px">${carte.nom}</div>
+            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
         `;
         zone.appendChild(cardEl);
         objetsActifs.push(carte.id);
@@ -165,50 +165,32 @@
             temps -= 1;
             libres[0].classList.add('occupe');
             activitesEnAttente.push({ carte: carte, element: libres[0] });
-        } else { imagination += carte.cout; alert("Aucun personnage disponible !"); }
-    }
-
-    function appliquerEffetImmediat(carte) {
-        if (carte.id === "0002") imagination += 3;
-        if (carte.id === "0016") piger(2);
-        alert(`Effet activé : ${carte.nom}`);
-    }
-
-    function piger(nb) {
-        for(let i=0; i<nb; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
+        } else { imagination += carte.cout; alert("Aucun perso disponible !"); }
     }
 
     function finirTour() {
-        // 1. Gain activités
-        activitesEnAttente.forEach(act => {
-            scoreFantaisie += 7;
-            act.element.classList.remove('occupe');
-        });
+        // Gain Fantaisie
+        activitesEnAttente.forEach(act => { scoreFantaisie += 8; act.element.classList.remove('occupe'); });
         activitesEnAttente = [];
 
-        // 2. Bonus objets (Secousse visuelle)
-        let bonusP = 1, bonusI = 0, bonusT = 0;
+        // Bonus Objets
+        let bI = 0, bP = 1, bT = 0;
         objetsActifs.forEach(id => {
-            const el = document.querySelector(`.card.objet[data-id="${id}"]`);
-            if(el) el.classList.add('shake');
-            setTimeout(() => el && el.classList.remove('shake'), 500);
-
-            if (id === "0059") bonusI += 2; // Lampe
-            if (id === "0036") bonusP += 1; // Miroir
-            if (id === "0021") bonusT += 1; // Coquillage
+            if (id === "0059") bI += 2;
+            if (id === "0036") bP += 1;
+            if (id === "0021") bT += 1;
         });
 
-        // 3. Calcul Imagination (Base 5 + Force Persos + Objets)
+        // Calcul Imagination (Base 5 + Force + Objets)
         let forceTotale = 0;
         document.querySelectorAll('#game-board .card.personnage').forEach(p => {
             forceTotale += parseInt(p.dataset.force || 0);
         });
 
-        imagination = 5 + forceTotale + bonusI;
-        temps = 3 + bonusT;
-        piger(bonusP);
-
-        // Limite de main
+        imagination = 5 + forceTotale + bI;
+        temps = 3 + bT;
+        
+        for(let i=0; i<bP; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
         if (mainJoueur.length > 10) mainJoueur = mainJoueur.slice(-10);
 
         actualiserStats();
@@ -227,22 +209,7 @@
     }
 
     function defausserManuelle() {
-        if(mainJoueur.length > 0) {
-            mainJoueur.pop();
-            afficherMain();
-        }
-    }
-
-    function effetMusique() {
-        for (let i = 0; i < 8; i++) {
-            const n = document.createElement('div');
-            n.className = 'note-musique';
-            n.innerText = "♪";
-            n.style.left = (Math.random() * window.innerWidth) + 'px';
-            n.style.top = (window.innerHeight / 2) + 'px';
-            document.body.appendChild(n);
-            setTimeout(() => n.remove(), 2000);
-        }
+        if(mainJoueur.length > 0) { mainJoueur.pop(); afficherMain(); }
     }
 
     function actualiserStats() {
