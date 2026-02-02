@@ -122,7 +122,8 @@
             imagination -= carte.cout;
             if (carte.type === "Personnage") poserSurTerrain(carte);
             else if (carte.type === "Objet") poserObjet(carte);
-            else if (carte.type === "Chanson") appliquerEffetChanson(carte);
+            else if (carte.type === "Chanson") { appliquerEffetChanson(carte); // <--- Vérifie bien que ce nom de fonction est identique
+}
             else if (carte.type === "Activité") {
                 if (temps >= 1) lancerActivite(carte);
                 else { imagination += carte.cout; alert("Pas de Temps !"); return; }
@@ -167,7 +168,41 @@
             activitesEnAttente.push({ carte: carte, element: libres[0] });
         } else { imagination += carte.cout; alert("Aucun perso disponible !"); }
     }
+function appliquerEffetChanson(carte) {
+    // On déclenche l'effet visuel des notes
+    effetMusique();
 
+    // Logique selon l'ID de la chanson
+    switch(carte.id) {
+        case "0002": // Au Bout du Rêve
+            imagination += 3;
+            alert("♫ Au Bout du Rêve : +3 Imagination !");
+            break;
+        case "0016": // Ce Rêve Bleu
+            piger(2);
+            alert("♫ Ce Rêve Bleu : Vous piochez 2 cartes !");
+            break;
+        case "0040": // Libérée, Délivrée
+            temps = 3;
+            alert("♫ Libérée, Délivrée : Votre Temps est réinitialisé !");
+            break;
+        case "0050": // Je suis ton ami
+            const nbPersos = document.querySelectorAll('#game-board .card.personnage').length;
+            scoreFantaisie += (nbPersos * 2);
+            alert(`♫ Je suis ton ami : +${nbPersos * 2} Fantaisie !`);
+            break;
+        case "0091": // Sous l'Océan
+            const nbAct = activitesEnAttente.length;
+            piger(nbAct);
+            alert(`♫ Sous l'Océan : +${nbAct} cartes piochées !`);
+            break;
+        default:
+            // Si l'ID n'est pas codé, on donne un petit bonus par défaut pour pas que ce soit inutile
+            scoreFantaisie += 2;
+            alert(`♫ Vous chantez ${carte.nom} : +2 Fantaisie !`);
+    }
+    actualiserStats();
+}
     function finirTour() {
         // Gain Fantaisie
         activitesEnAttente.forEach(act => { scoreFantaisie += 8; act.element.classList.remove('occupe'); });
@@ -211,7 +246,15 @@
     function defausserManuelle() {
         if(mainJoueur.length > 0) { mainJoueur.pop(); afficherMain(); }
     }
-
+    
+    function piger(nb) {
+    for(let i=0; i<nb; i++) {
+        if(deck.length > 0) {
+            mainJoueur.push(deck.shift());
+        }
+    }
+    afficherMain();
+}
     function actualiserStats() {
         document.getElementById('imagination').innerText = imagination;
         document.getElementById('temps').innerText = temps;
@@ -224,3 +267,4 @@
 </script>
 </body>
 </html>
+
