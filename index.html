@@ -4,318 +4,29 @@
     <meta charset="UTF-8">
     <title>Fantasya - Plateau de Jeu</title>
     <style>
-        /* 1. RESET ET BASES - On bloque le scroll pour tout voir d'un coup */
         body { background: #1a1a2e; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-        
-        /* 2. BARRE DE STATS - Plus compacte */
         #status-bar { background: #16213e; padding: 8px; display: flex; justify-content: space-around; align-items: center; border-bottom: 2px solid #e94560; flex-shrink: 0; }
         .stat { font-size: 14px; font-weight: bold; }
         .stat span { color: #e94560; font-size: 18px; }
-
-        /* 3. STRUCTURE DU PLATEAU - On utilise flex-grow pour remplir l'espace */
-        #main-layout { display: flex; flex-grow: 1; overflow: hidden; }
-        
-        /* Zone Objets à gauche */
-        #object-zone { width: 120px; background: rgba(0,0,0,0.3); border-right: 1px solid #444; padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-        
-        /* Zone de combat au centre */
-        #game-board { flex-grow: 1; display: flex; align-content: center; justify-content: center; gap: 10px; padding: 10px; flex-wrap: wrap; overflow-y: auto; background: radial-gradient(circle, #1b1b3a 0%, #1a1a2e 100%); }
-
-        /* 4. LA MAIN - Fixée en bas */
-        #player-hand { height: 25vh; background: rgba(0,0,0,0.5); border-top: 2px solid #444; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 5px 10px; overflow-x: auto; flex-shrink: 0; }
-
-        /* 5. LES CARTES - On réduit la taille pour que ça respire */
-        .card { width: 100px; height: 145px; background: white; color: #333; border-radius: 6px; padding: 5px; font-size: 9px; cursor: pointer; transition: 0.2s; border: 2px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
-        .card:hover { transform: translateY(-10px); z-index: 10; }
-        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 10px #ffd700; }
-        
-        .card.personnage { border-color: #2196f3; }
-        .card.activité { border-color: #ff9800; }
-        .card.chanson { border-color: #9c27b0; }
-        .card.objet { border-color: #4caf50; height: 110px; width: 80px; } /* Objets plus petits */
-
-        .card-header { font-weight: bold; border-bottom: 1px solid #ddd; margin-bottom: 3px; height: 22px; overflow: hidden; text-align: center; line-height: 1; }
-        .card-img { width: 100%; height: 50px; background: #eee; border-radius: 3px; object-fit: cover; }
-        .card-rules { flex-grow: 1; font-size: 8px; line-height: 1; margin-top: 3px; overflow: hidden; }
-        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 9px; margin-top: 2px; }
-
-        .occupe { opacity: 0.5; filter: grayscale(100%); border: 2px dashed #ff9800 !important; }
-        .occupe::after { content: "💤"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; }
-
-        /* Défausse compacte */
-        #discard-pile { position: fixed; bottom: 10px; right: 10px; width: 60px; height: 85px; border: 2px dashed #e94560; border-radius: 5px; background: rgba(0,0,0,0.4); color: #e94560; font-size: 9px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; z-index: 100; }
-
-        button { background: #e94560; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        button:hover { background: #ff5e78; }
-        
-        #victory-screen { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-    </style>
-</head>
-<body>
-
-<div id="victory-screen">
-    <h1 style="color: #ffd700; font-size: 40px;">VICTOIRE !</h1>
-    <button onclick="location.reload()">REJOUER</button>
-</div>
-
-<div id="status-bar">
-    <div class="stat">🃏 Deck: <span id="deck-count">0</span></div>
-    <div class="stat">✨ Fantaisie: <span id="fantaisie">0</span>/50</div>
-    <div class="stat">💎 Imagination: <span id="imagination">5</span></div>
-    <div class="stat">⏳ Temps: <span id="temps">3</span></div>
-    <button onclick="mulligan()" id="btn-mulligan">Mulligan</button>
-    <button onclick="finirTour()">Finir le tour</button>
-</div>
-
-<div id="main-layout">
-    <div id="object-zone">
-        <div style="font-size: 10px; color: #4caf50; text-align: center; border-bottom: 1px solid #4caf50; margin-bottom: 5px;">OBJETS</div>
-    </div>
-    <div id="game-board">
-        </div>
-</div>
-
-<div id="player-hand">
-    </div>
-
-<div id="discard-pile" onclick="defausserManuelle()">🗑️<br>JETER</div>
-
-<script>
-    let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [], objetsActifs = [];
-    let imagination = 5, temps = 3, scoreFantaisie = 0, mulliganFait = false;
-
-    async function initialiserJeu() {
-        try {
-            const response = await fetch('./fantasya_cards.json');
-            bddCartes = await response.json();
-            deck = [...bddCartes].sort(() => 0.5 - Math.random());
-            mainJoueur = deck.splice(0, 7);
-            actualiserStats();
-            afficherMain();
-        } catch (e) { alert("Erreur : Fichier JSON introuvable !"); }
-    }
-
-    function afficherMain() {
-        const handDiv = document.getElementById('player-hand');
-        handDiv.innerHTML = "";
-        mainJoueur.forEach((carte, index) => {
-            const cardEl = document.createElement('div');
-            const estJouable = imagination >= (carte.cout || 0) ? "jouable" : "";
-            cardEl.className = `card ${carte.type.toLowerCase()} ${estJouable}`;
-            cardEl.innerHTML = `
-                <div class="card-header">${carte.nom}</div>
-                <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
-                <div class="card-rules">${carte.regles}</div>
-                <div class="card-footer">
-                    <span>💎 ${carte.cout}</span>
-                    <span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span>
-                </div>
-            `;
-            cardEl.onclick = () => jouerCarte(index);
-            handDiv.appendChild(cardEl);
-        });
-    }
-
-    function jouerCarte(index) {
-        const carte = mainJoueur[index];
-        if (imagination >= carte.cout) {
-            imagination -= carte.cout;
-            if (carte.type === "Personnage") poserSurTerrain(carte);
-            else if (carte.type === "Objet") poserObjet(carte);
-            else if (carte.type === "Chanson") {
-    appliquerEffetChanson(carte);
-}
-            else if (carte.type === "Activité") {
-                if (temps >= 1) lancerActivite(carte);
-                else { imagination += carte.cout; alert("Pas de Temps !"); return; }
-            }
-            mainJoueur.splice(index, 1);
-            actualiserStats();
-            afficherMain();
-        }
-    }
-
-    function poserSurTerrain(carte) {
-        const board = document.getElementById('game-board');
-        const cardEl = document.createElement('div');
-        cardEl.className = "card personnage";
-        cardEl.dataset.force = carte.stats ? carte.stats.force : 0;
-        cardEl.innerHTML = `
-            <div class="card-header">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
-            <div class="card-footer">🛡️ ${carte.stats ? carte.stats.endurance : '?'}</div>
-        `;
-        board.appendChild(cardEl);
-    }
-
-    function poserObjet(carte) {
-        const zone = document.getElementById('object-zone');
-        const cardEl = document.createElement('div');
-        cardEl.className = "card objet";
-        cardEl.dataset.id = carte.id;
-        cardEl.innerHTML = `
-            <div class="card-header" style="font-size:7px">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
-        `;
-        zone.appendChild(cardEl);
-        objetsActifs.push(carte.id);
-    }
-
-    function lancerActivite(carte) {
-        const libres = document.querySelectorAll('#game-board .card.personnage:not(.occupe)');
-        if (libres.length > 0) {
-            temps -= 1;
-            libres[0].classList.add('occupe');
-            activitesEnAttente.push({ carte: carte, element: libres[0] });
-        } else { imagination += carte.cout; alert("Aucun perso disponible !"); }
-    }
-function appliquerEffetChanson(carte) {
-    // Déclenche l'animation visuelle
-    effetMusique();
-
-    // Logique basée sur l'ID de la carte (fantasya_cards.json)
-    switch(carte.id) {
-        case "0002": // Au Bout du Rêve
-            imagination += 3;
-            alert("♫ Au Bout du Rêve : +3 Imagination !");
-            break;
-        case "0016": // Ce Rêve Bleu
-            piger(2);
-            alert("♫ Ce Rêve Bleu : Vous piochez 2 cartes !");
-            break;
-        case "0040": // Libérée, Délivrée
-            temps = 3; 
-            alert("♫ Libérée, Délivrée : Temps réinitialisé !");
-            break;
-        case "0050": // Je suis ton ami
-            const nbPersos = document.querySelectorAll('#game-board .card.personnage').length;
-            scoreFantaisie += (nbPersos * 2);
-            alert(`♫ Je suis ton ami : +${nbPersos * 2} Fantaisie !`);
-            break;
-        case "0091": // Sous l'Océan
-            const nbAct = activitesEnAttente.length;
-            piger(nbAct);
-            alert(`♫ Sous l'Océan : +${nbAct} cartes piochées !`);
-            break;
-        default:
-            // Bonus par défaut si l'ID n'est pas encore programmé
-            scoreFantaisie += 2;
-            alert(`♫ Vous chantez ${carte.nom} : +2 Fantaisie !`);
-    }
-    actualiserStats();
-}
-    function finirTour() {
-        // Gain Fantaisie
-        activitesEnAttente.forEach(act => { scoreFantaisie += 8; act.element.classList.remove('occupe'); });
-        activitesEnAttente = [];
-
-        // Bonus Objets
-        let bI = 0, bP = 1, bT = 0;
-        objetsActifs.forEach(id => {
-            if (id === "0059") bI += 2;
-            if (id === "0036") bP += 1;
-            if (id === "0021") bT += 1;
-        });
-
-        // Calcul Imagination (Base 5 + Force + Objets)
-        let forceTotale = 0;
-        document.querySelectorAll('#game-board .card.personnage').forEach(p => {
-            forceTotale += parseInt(p.dataset.force || 0);
-        });
-
-        imagination = 5 + forceTotale + bI;
-        temps = 3 + bT;
-        
-        for(let i=0; i<bP; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
-        if (mainJoueur.length > 10) mainJoueur = mainJoueur.slice(-10);
-
-        actualiserStats();
-        afficherMain();
-    }
-
-    function mulligan() {
-        if(!mulliganFait) {
-            deck.push(...mainJoueur);
-            deck.sort(() => 0.5 - Math.random());
-            mainJoueur = deck.splice(0, 7);
-            mulliganFait = true;
-            document.getElementById('btn-mulligan').disabled = true;
-            afficherMain();
-        }
-    }
-
-    function defausserManuelle() {
-        if(mainJoueur.length > 0) { mainJoueur.pop(); afficherMain(); }
-    }
-    
-function piger(nb) {
-    for(let i=0; i<nb; i++) {
-        if(deck.length > 0) mainJoueur.push(deck.shift());
-    }
-    afficherMain();
-}
-    function actualiserStats() {
-        document.getElementById('imagination').innerText = imagination;
-        document.getElementById('temps').innerText = temps;
-        document.getElementById('fantaisie').innerText = scoreFantaisie;
-        document.getElementById('deck-count').innerText = deck.length;
-        if (scoreFantaisie >= 50) document.getElementById('victory-screen').style.display = 'flex';
-    }
-
-    initialiserJeu();
-</script>
-</body>
-</html>
-
-
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Fantasya - Plateau de Jeu</title>
-    <style>
-        /* RESET ET BASES */
-        body { background: #1a1a2e; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-        
-        /* BARRE DE STATS */
-        #status-bar { background: #16213e; padding: 8px; display: flex; justify-content: space-around; align-items: center; border-bottom: 2px solid #e94560; flex-shrink: 0; }
-        .stat { font-size: 14px; font-weight: bold; }
-        .stat span { color: #e94560; font-size: 18px; }
-
-        /* STRUCTURE DU PLATEAU */
         #main-layout { display: flex; flex-grow: 1; overflow: hidden; }
         #object-zone { width: 120px; background: rgba(0,0,0,0.3); border-right: 1px solid #444; padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
         #game-board { flex-grow: 1; display: flex; align-content: center; justify-content: center; gap: 10px; padding: 10px; flex-wrap: wrap; overflow-y: auto; background: radial-gradient(circle, #1b1b3a 0%, #1a1a2e 100%); }
-
-        /* LA MAIN */
         #player-hand { height: 25vh; background: rgba(0,0,0,0.5); border-top: 2px solid #444; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 5px 10px; overflow-x: auto; flex-shrink: 0; }
-
-        /* LES CARTES */
         .card { width: 100px; height: 145px; background: white; color: #333; border-radius: 6px; padding: 5px; font-size: 9px; cursor: pointer; transition: 0.2s; border: 2px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
         .card:hover { transform: translateY(-10px); z-index: 10; }
         .jouable { border-color: #ffd700 !important; box-shadow: 0 0 10px #ffd700; }
-        
         .card.personnage { border-color: #2196f3; }
         .card.activité { border-color: #ff9800; }
         .card.chanson { border-color: #9c27b0; }
         .card.objet { border-color: #4caf50; height: 110px; width: 80px; }
-
         .card-header { font-weight: bold; border-bottom: 1px solid #ddd; margin-bottom: 3px; height: 22px; overflow: hidden; text-align: center; line-height: 1; }
         .card-img { width: 100%; height: 50px; background: #eee; border-radius: 3px; object-fit: cover; }
         .card-rules { flex-grow: 1; font-size: 8px; line-height: 1; margin-top: 3px; overflow: hidden; }
         .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 9px; margin-top: 2px; }
-
         .occupe { opacity: 0.5; filter: grayscale(100%); border: 2px dashed #ff9800 !important; }
-        .occupe::after { content: "💤"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; }
-
-        /* ANIMATION MUSIQUE */
         .note-musique { position: fixed; color: #9c27b0; font-size: 24px; pointer-events: none; z-index: 2000; animation: envoler 2s forwards; }
         @keyframes envoler { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-200px); opacity: 0; } }
-
-        /* DEFAUSSE */
         #discard-pile { position: fixed; bottom: 10px; right: 10px; width: 60px; height: 85px; border: 2px dashed #e94560; border-radius: 5px; background: rgba(0,0,0,0.4); color: #e94560; font-size: 9px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; z-index: 100; }
-
         button { background: #e94560; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         #victory-screen { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
     </style>
@@ -337,14 +48,11 @@ function piger(nb) {
 </div>
 
 <div id="main-layout">
-    <div id="object-zone">
-        <div style="font-size: 10px; color: #4caf50; text-align: center; border-bottom: 1px solid #4caf50; margin-bottom: 5px;">OBJETS</div>
-    </div>
+    <div id="object-zone"><div style="font-size: 10px; color: #4caf50; text-align: center; border-bottom: 1px solid #4caf50; margin-bottom: 5px;">OBJETS</div></div>
     <div id="game-board"></div>
 </div>
 
 <div id="player-hand"></div>
-
 <div id="discard-pile" onclick="defausserManuelle()">🗑️<br>JETER</div>
 
 <script>
@@ -359,7 +67,7 @@ function piger(nb) {
             mainJoueur = deck.splice(0, 7);
             actualiserStats();
             afficherMain();
-        } catch (e) { alert("Erreur : Fichier fantasya_cards.json introuvable !"); }
+        } catch (e) { console.error("Erreur JSON:", e); }
     }
 
     function afficherMain() {
@@ -373,10 +81,7 @@ function piger(nb) {
                 <div class="card-header">${carte.nom}</div>
                 <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
                 <div class="card-rules">${carte.regles}</div>
-                <div class="card-footer">
-                    <span>💎 ${carte.cout}</span>
-                    <span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span>
-                </div>
+                <div class="card-footer"><span>💎 ${carte.cout}</span><span>${carte.stats ? '⚔️'+carte.stats.force : ''}</span></div>
             `;
             cardEl.onclick = () => jouerCarte(index);
             handDiv.appendChild(cardEl);
@@ -397,7 +102,7 @@ function piger(nb) {
             mainJoueur.splice(index, 1);
             actualiserStats();
             afficherMain();
-        } else { alert("Pas assez d'Imagination !"); }
+        }
     }
 
     function poserSurTerrain(carte) {
@@ -418,10 +123,7 @@ function piger(nb) {
         const cardEl = document.createElement('div');
         cardEl.className = "card objet";
         cardEl.dataset.id = carte.id;
-        cardEl.innerHTML = `
-            <div class="card-header" style="font-size:7px">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
-        `;
+        cardEl.innerHTML = `<div class="card-header" style="font-size:7px">${carte.nom}</div><img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">`;
         zone.appendChild(cardEl);
         objetsActifs.push(carte.id);
     }
@@ -438,16 +140,9 @@ function piger(nb) {
     function appliquerEffetChanson(carte) {
         effetMusique();
         switch(carte.id) {
-            case "0002": imagination += 3; alert("♫ Au Bout du Rêve : +3 Imagination !"); break;
-            case "0016": piger(2); alert("♫ Ce Rêve Bleu : Vous piochez 2 cartes !"); break;
-            case "0040": temps = 3; alert("♫ Libérée, Délivrée : Temps réinitialisé !"); break;
-            case "0050": 
-                const nbP = document.querySelectorAll('#game-board .card.personnage').length;
-                scoreFantaisie += (nbP * 2);
-                alert(`♫ Je suis ton ami : +${nbP * 2} Fantaisie !`);
-                break;
-            case "0091": piger(activitesEnAttente.length); alert(`♫ Sous l'Océan : Cartes piochées !`); break;
-            default: scoreFantaisie += 2; alert(`♫ Chanson : +2 Fantaisie !`);
+            case "0002": imagination += 3; break;
+            case "0016": piger(2); break;
+            case "0040": temps = 3; break;
         }
         actualiserStats();
     }
@@ -464,6 +159,11 @@ function piger(nb) {
         }
     }
 
+    function piger(nb) {
+        for(let i=0; i<nb; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
+        afficherMain();
+    }
+
     function finirTour() {
         activitesEnAttente.forEach(act => { scoreFantaisie += 8; act.element.classList.remove('occupe'); });
         activitesEnAttente = [];
@@ -474,20 +174,12 @@ function piger(nb) {
             if (id === "0021") bT += 1;
         });
         let forceTotale = 0;
-        document.querySelectorAll('#game-board .card.personnage').forEach(p => {
-            forceTotale += parseInt(p.dataset.force || 0);
-        });
+        document.querySelectorAll('#game-board .card.personnage').forEach(p => { forceTotale += parseInt(p.dataset.force || 0); });
         imagination = 5 + forceTotale + bI;
         temps = 3 + bT;
         piger(bP);
         if (mainJoueur.length > 10) mainJoueur = mainJoueur.slice(-10);
         actualiserStats();
-        afficherMain();
-    }
-
-    function piger(nb) {
-        for(let i=0; i<nb; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
-        actualiserStats(); // Pour mettre à jour le compteur de deck
         afficherMain();
     }
 
@@ -503,9 +195,7 @@ function piger(nb) {
         }
     }
 
-    function defausserManuelle() {
-        if(mainJoueur.length > 0) { mainJoueur.pop(); afficherMain(); }
-    }
+    function defausserManuelle() { if(mainJoueur.length > 0) { mainJoueur.pop(); afficherMain(); } }
 
     function actualiserStats() {
         document.getElementById('imagination').innerText = imagination;
