@@ -78,7 +78,7 @@
 <script>
     let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [], pileDefausse = [];
     let imagination = 5, temps = 3, scoreFantaisie = 0, mulliganFait = false;
-
+    let objetsActifs = [];
     async function initialiserJeu() {
         try {
             const response = await fetch('./fantasya_cards.json');
@@ -133,21 +133,22 @@
 }
 
     // Nouvelle fonction pour les objets
-    function poserObjet(carte) {
-        const zone = document.getElementById('object-zone');
-        const cardEl = document.createElement('div');
-        cardEl.className = "card objet";
-        cardEl.innerHTML = `
-            <div class="card-header" style="font-size:8px">${carte.nom}</div>
-            <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
-            <div class="card-rules" style="font-size:7px">${carte.regles}</div>
-    `;
-        zone.appendChild(cardEl);
+   function poserObjet(carte) {
+    const zone = document.getElementById('object-zone');
+    const cardEl = document.createElement('div');
+    cardEl.className = "card objet";
+    cardEl.dataset.id = carte.id; // On stocke l'ID dans l'élément HTML
     
-    // Effet immédiat ou permanent selon l'ID
-        if(carte.id === "0036") { // Exemple : Miroir Magique
-        alert("Objet activé : Vous piocherez +1 carte à chaque tour !");
-    }
+    cardEl.innerHTML = `
+        <div class="card-header" style="font-size:8px">${carte.nom}</div>
+        <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
+        <div class="card-rules" style="font-size:7px">${carte.regles}</div>
+    `;
+    zone.appendChild(cardEl);
+    objetsActifs.push(carte.id);
+    
+    // Effet immédiat à la pose
+    if(carte.id === "0059") alert("La Lampe Magique est posée ! Vos vœux vont s'exaucer...");
 }
             mainJoueur.splice(index, 1);
             actualiserStats();
@@ -180,32 +181,47 @@
         }
     }
 
-    function finirTour() {
-        activitesEnAttente.forEach(act => {
-            scoreFantaisie += 8;
-            act.element.classList.remove('occupe');
-        });
-        activitesEnAttente = [];
-        
-        // Bonus imagination par Force
-        const persos = document.querySelectorAll('#game-board .card.personnage');
-        let bonus = 0;
-        // Ici on simplifie le calcul pour l'instant
-        imagination = 5 + persos.length; 
-        
-        if (deck.length > 0) mainJoueur.push(deck.shift());
-        if (mainJoueur.length > 10) mainJoueur.splice(0, mainJoueur.length - 10);
-        
-        temps = 3;
-        // Calcul bonus des Objets
-    const objetsPoses = document.querySelectorAll('#object-zone .card.objet');
-    let bonusPioche = 1; // 1 de base
+  function finirTour() {
+    let bonusPioche = 1;
+    let bonusImagination = 0;
+    let bonusTemps = 0;
+    let bonusFantaisie = 0;
 
-    objetsPoses.forEach(obj => {
-        // Si tu as le Miroir Magique (ID 0036) par exemple
-        if (obj.innerHTML.includes("0036")) bonusPioche += 1;
+    // 1. Calcul des bonus des objets actifs
+    objetsActifs.forEach(id => {
+        if (id === "0059") bonusImagination += 2; // Lampe
+        if (id === "0097") bonusFantaisie += 5;   // Trident
+        if (id === "0036") bonusPioche += 1;      // Miroir
+        if (id === "0021") bonusTemps += 1;       // Coquillage
     });
 
+    // 2. Résolution des activités (ton code existant)
+    activitesEnAttente.forEach(act => {
+        scoreFantaisie += 8;
+        act.element.classList.remove('occupe');
+    });
+    activitesEnAttente = [];
+
+    // 3. Application des bonus
+    scoreFantaisie += bonusFantaisie;
+    piger(bonusPioche);
+    
+    // 4. Reset Ressources (Base + Bonus)
+    const persos = document.querySelectorAll('#game-board .card.personnage');
+    imagination = 5 + persos.length + bonusImagination;
+    temps = 3 + bonusTemps;
+
+    // 5. Nettoyage main
+    if (mainJoueur.length > 10) mainJoueur.splice(0, mainJoueur.length - 10);
+    
+    actualiserStats();
+    afficherMain();
+
+    // Petit rapport de début de journée
+    let rapport = "Le soleil se lève !";
+    if (bonusImagination > 0 || bonusTemps > 0) rapport += `\nVos objets vous ont aidé !`;
+    alert(rapport);
+}
     // On pioche selon le nombre d'objets
     piger(bonusPioche);
     
@@ -258,4 +274,5 @@
 </script>
 </body>
 </html>
+
 
