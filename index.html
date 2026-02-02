@@ -7,109 +7,58 @@
         body { background: #1a1a2e; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; }
         
         #status-bar { background: #16213e; padding: 15px; display: flex; justify-content: space-around; align-items: center; border-bottom: 3px solid #e94560; }
-        .stat { font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; }
-        .stat span { color: #e94560; font-size: 22px; }
+        .stat { font-size: 16px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; }
+        .stat span { color: #e94560; font-size: 20px; }
 
-        #game-board { height: 50vh; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; }
+        #game-board { height: 50vh; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; overflow-y: auto; }
         #player-hand { height: 35vh; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 10px; background: rgba(0,0,0,0.4); border-top: 2px solid #444; overflow-x: auto; }
 
-        /* Cartes de base */
-        .card { width: 125px; height: 180px; background: white; color: #333; border-radius: 10px; padding: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s; border: 3px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
-        
-        /* Effet de surbrillance dorée */
-        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 15px #ffd700; transform: translateY(-5px); }
+        .card { width: 120px; height: 170px; background: white; color: #333; border-radius: 10px; padding: 8px; font-size: 11px; cursor: pointer; transition: all 0.3s; border: 3px solid #333; position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
+        .jouable { border-color: #ffd700 !important; box-shadow: 0 0 15px #ffd700; transform: translateY(-10px); }
         
         .card.personnage { border-color: #2196f3; }
         .card.activité { border-color: #ff9800; }
-        .card.chanson { border-color: #9c27b0 !important; background: #fdf0ff !important; font-style: italic; }
-        .card.chanson .card-header { color: #4a148c; }
+        .card.chanson { border-color: #9c27b0; background: #fdf0ff; }
         .card.objet { border-color: #4caf50; }
 
-        .card-header { font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 3px; font-size: 11px; text-align: center; color: #000; height: 30px; display: flex; align-items: center; justify-content: center; }
-        .card-img { width: 100%; height: 65px; background: #eee; border-radius: 4px; object-fit: cover; margin-bottom: 3px; }
-        .card-rules { flex-grow: 1; font-size: 9px; line-height: 1.1; overflow: hidden; }
-        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; }
+        .card-header { font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 3px; font-size: 10px; text-align: center; color: #000; min-height: 25px; }
+        .card-img { width: 100%; height: 60px; background: #eee; border-radius: 4px; object-fit: cover; margin-bottom: 3px; }
+        .card-rules { flex-grow: 1; font-size: 8px; line-height: 1.1; overflow: hidden; color: #444; }
+        .card-footer { display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; }
 
         .occupe { opacity: 0.6; filter: grayscale(100%); border: 3px dashed #ff9800 !important; }
-        .occupe::after { content: "💤"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30px; }
         .note-musique { position: fixed; color: #9c27b0; font-size: 24px; pointer-events: none; z-index: 2000; animation: envoler 2s ease-out forwards; }
+        @keyframes envoler { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-200px); opacity: 0; } }
 
-@keyframes envoler {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
-}
+        #discard-pile { position: fixed; bottom: 20px; right: 20px; width: 80px; height: 110px; background: rgba(255, 255, 255, 0.1); border: 2px solid #e94560; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #e94560; font-size: 10px; text-align: center; }
         #victory-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; }
-        button { background: #e94560; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        button:disabled { background: #555; }
-        
-       #discard-pile {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 100px;
-    height: 140px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid #e94560;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    color: #e94560;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-#discard-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-/* Petit badge pour le nombre de cartes jetées */
-#discard-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: #e94560;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 12px;
-}
+        button { background: #e94560; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="victory-screen">
-    <h1 style="font-size: 60px; color: #ffd700;">VICTOIRE !</h1>
-    <p id="victory-msg"></p>
-    <button onclick="location.reload()">Recommencer l'aventure</button>
+    <h1 style="color: #ffd700;">VICTOIRE !</h1>
+    <button onclick="location.reload()">Rejouer</button>
 </div>
 
 <div id="status-bar">
+    <div class="stat">Pioche: <span id="deck-count">0</span></div>
     <div class="stat">Fantaisie: <span id="fantaisie">0</span>/50</div>
     <div class="stat">Imagination: <span id="imagination">5</span></div>
     <div class="stat">Temps: <span id="temps">3</span></div>
     <button id="btn-mulligan" onclick="mulligan()">Mulligan</button>
-    <button onclick="finirTour()">Finir le Tour (Sommeil)</button>
+    <button onclick="finirTour()">Dormir</button>
 </div>
-    <div id="discard-pile" onclick="defausserManuelle()">
-    <div id="discard-count">0</div>
-    <div id="discard-content" style="display:flex; align-items:center; justify-content:center; text-align:center;">
-    DÉFAUSSE
-    </div>
-</div>
+
 <div id="game-board"></div>
 <div id="player-hand"></div>
-<div class="stat">Pioche: <span id="deck-count">0</span></div>
+<div id="discard-pile" onclick="defausserManuelle()">Défausse<br>(Cliquez)</div>
+
 <script>
-    let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [];
+    let bddCartes = [], deck = [], mainJoueur = [], activitesEnAttente = [], pileDefausse = [];
     let imagination = 5, temps = 3, scoreFantaisie = 0, mulliganFait = false;
-    let pileDefausse = [];
+
     async function initialiserJeu() {
         try {
             const response = await fetch('./fantasya_cards.json');
@@ -118,7 +67,7 @@
             mainJoueur = deck.splice(0, 7);
             actualiserStats();
             afficherMain();
-        } catch (e) { alert("Erreur : Fichier JSON introuvable !"); }
+        } catch (e) { alert("Erreur de chargement du fichier JSON !"); }
     }
 
     function afficherMain() {
@@ -130,7 +79,7 @@
             cardEl.className = `card ${carte.type.toLowerCase()} ${estJouable}`;
             cardEl.innerHTML = `
                 <div class="card-header">${carte.nom}</div>
-                <img class="card-img" src="./images/${carte.id}.png" onerror="this.src='https://via.placeholder.com/130x70?text=ID+${carte.id}'">
+                <img class="card-img" src="./images/${carte.id}.png" onerror="this.style.display='none'">
                 <div class="card-rules">${carte.regles}</div>
                 <div class="card-footer">
                     <span>💎 ${carte.cout}</span>
@@ -143,86 +92,32 @@
     }
 
     function jouerCarte(index) {
-    const carte = mainJoueur[index];
-    if (imagination >= carte.cout) {
-        // On paie le coût
-        imagination -= carte.cout;
-        
-        if (carte.type === "Personnage") {
-            poserSurTerrain(carte);
-            appliquerEffet(carte);
-        } 
-        // Modifie ta fonction jouerCarte pour les Chansons
-        // Dans le bloc else if (carte.type === "Chanson") :
-        else if (carte.type === "Chanson") {
-        effetMusique();
-        appliquerEffet(carte);
-        ajouterADefausse(carte); // <--- AJOUTE ÇA
-}
-        else if (carte.type === "Activité") {
-            if (temps >= 1) {
-                lancerActivite(carte);
-            } else {
-                imagination += carte.cout; // Rembourse si pas de temps
-                alert("Pas assez de Temps !");
-                return;
+        const carte = mainJoueur[index];
+        if (imagination >= carte.cout) {
+            imagination -= carte.cout;
+            if (carte.type === "Personnage") {
+                poserSurTerrain(carte);
+                appliquerEffet(carte);
+            } else if (carte.type === "Chanson") {
+                effetMusique();
+                appliquerEffet(carte);
+                pileDefausse.push(carte);
+            } else if (carte.type === "Activité") {
+                if (temps >= 1) {
+                    lancerActivite(carte);
+                } else { imagination += carte.cout; alert("Plus de Temps !"); return; }
             }
+            mainJoueur.splice(index, 1);
+            actualiserStats();
+            afficherMain();
         }
-
-        // Retirer la carte de la main
-        mainJoueur.splice(index, 1);
-        actualiserStats();
-        afficherMain();
-    } else {
-        alert("Pas assez d'Imagination !");
-    }
-}
-
-    function appliquerEffet(carte) {
-    switch(carte.id) {
-        // --- PERSONNAGES ---
-        case "0005": scoreFantaisie += 5; break; // Baloo
-        case "0041": temps += 2; break; // Grand-Mère Feuillage
-        
-        // --- CHANSONS (Effets immédiats) ---
-        case "0002": // Au Bout du Rêve
-            imagination += 3;
-            alert("♫ Au Bout du Rêve : +3 Imagination !");
-            break;
-        case "0016": // Ce Rêve Bleu
-            piger(2);
-            alert("♫ Ce Rêve Bleu : Vous piochez 2 cartes !");
-            break;
-        case "0040": // Libérée, Délivrée
-            // Effet : Redonne tout le Temps
-            temps = 3;
-            alert("♫ Libérée, Délivrée : Votre Temps est réinitialisé !");
-            break;
-        case "0050": // Je suis ton ami
-            // Effet : Donne de la Fantaisie pour chaque perso sur le terrain
-            const nbPersos = document.querySelectorAll('#game-board .card.personnage').length;
-            scoreFantaisie += (nbPersos * 2);
-            alert(`♫ Je suis ton ami : +${nbPersos * 2} Fantaisie !`);
-            break;
-        case "0091": // Sous l'Océan
-            // Effet : Piochez 1 carte pour chaque Activité en cours
-            const nbAct = activitesEnAttente.length;
-            piger(nbAct);
-            alert(`♫ Sous l'Océan : +${nbAct} cartes piochées !`);
-            break;
-    }
-    actualiserStats();
-}
-    
-    function piger(nb) {
-        for(let i=0; i<nb; i++) if(deck.length > 0) mainJoueur.push(deck.shift());
     }
 
     function poserSurTerrain(carte) {
         const board = document.getElementById('game-board');
         const cardEl = document.createElement('div');
         cardEl.className = "card personnage";
-        cardEl.innerHTML = `<div class="card-header">${carte.nom}</div><img class="card-img" src="./images/${carte.id}.png"><div class="card-footer">🛡️ ${carte.stats.endurance}</div>`;
+        cardEl.innerHTML = `<div class="card-header">${carte.nom}</div><div class="card-footer">🛡️ ${carte.stats.endurance}</div>`;
         board.appendChild(cardEl);
     }
 
@@ -232,26 +127,34 @@
             temps -= 1;
             libres[0].classList.add('occupe');
             activitesEnAttente.push({ carte: carte, element: libres[0] });
-        } else { imagination += carte.cout; alert("Il faut un personnage libre !"); }
+        } else { imagination += carte.cout; alert("Aucun personnage disponible !"); }
+    }
+
+    function appliquerEffet(carte) {
+        switch(carte.id) {
+            case "0005": scoreFantaisie += 5; break; 
+            case "0041": temps += 2; break;
+            case "0002": imagination += 3; break;
+        }
     }
 
     function finirTour() {
-        // 1. Résoudre Activités
         activitesEnAttente.forEach(act => {
-            let gain = (parseInt(act.carte.id) % 2 === 0) ? 6 : 10; // Simulation de gain
-            scoreFantaisie += gain;
+            scoreFantaisie += 8;
             act.element.classList.remove('occupe');
         });
         activitesEnAttente = [];
-
-        // 2. Pioche et Défausse (Limite 10 cartes)
-        piger(1);
-        if (mainJoueur.length > 10) {
-            alert("Trop de cartes ! Défausse automatique de l'excédent.");
-            mainJoueur = mainJoueur.slice(0, 10);
-        }
-
-        imagination = 5; temps = 3;
+        
+        // Bonus imagination par Force
+        const persos = document.querySelectorAll('#game-board .card.personnage');
+        let bonus = 0;
+        // Ici on simplifie le calcul pour l'instant
+        imagination = 5 + persos.length; 
+        
+        if (deck.length > 0) mainJoueur.push(deck.shift());
+        if (mainJoueur.length > 10) mainJoueur.splice(0, mainJoueur.length - 10);
+        
+        temps = 3;
         actualiserStats();
         afficherMain();
     }
@@ -267,131 +170,35 @@
         }
     }
 
-    function actualiserStats() {
-    // On calcule le bonus actuel pour l'afficher
-    const personnagesSurTerrain = document.querySelectorAll('#game-board .card.personnage');
-    let bonusActuel = 0;
-    personnagesSurTerrain.forEach(p => {
-        const f = p.querySelector('.card-footer').innerText.match(/⚔️(\d+)/);
-        if(f) bonusActuel += parseInt(f[1]);
-    });
-
-    document.getElementById('imagination').innerText = imagination;
-    // On peut ajouter un petit texte à côté si bonus > 0
-    if(bonusActuel > 0) {
-        document.getElementById('imagination').innerHTML += ` <small style="color:#00ffcc">(+${bonusActuel})</small>`;
-    }
-
-    document.getElementById('temps').innerText = temps;
-    document.getElementById('fantaisie').innerText = scoreFantaisie;
-    document.getElementById('deck-count').innerText = deck.length;
-    // ... reste de ta fonction victoire ...
-}
-    }
-   function ajouterADefausse(carte) {
-    pileDefausse.push(carte);
-    const pileDiv = document.getElementById('discard-content');
-    const countDiv = document.getElementById('discard-count');
-    
-    // On affiche l'image de la dernière carte jetée
-    pileDiv.innerHTML = `
-        <img src="./images/${carte.id}.png" 
-             style="width:100%; height:100%; object-fit:cover; opacity:0.7;"
-             onerror="this.src='https://via.placeholder.com/100x140?text=${carte.nom}'">
-    `;
-    countDiv.innerText = pileDefausse.length;
-}
-
-// Modifie aussi ta fonction defausserManuelle pour appeler ajouterADefausse(carte)
-    // 2. Défausse Automatique (Limite de 10 cartes à la fin du tour)
-    function verifierLimiteMain() {
-    if (mainJoueur.length > 10) {
-        let surplus = mainJoueur.length - 10;
-        // On retire les cartes les plus anciennes (les premières de la main)
-        mainJoueur.splice(0, surplus); 
-        alert("Limite de 10 cartes dépassée ! " + surplus + " carte(s) envoyée(s) à la défausse.");
-    }
-}
-
-    // 3. Mise à jour de finirTour pour inclure la vérification
-   function finirTour() {
-    // 1. Résoudre les Activités (ton code existant)
-    let totalGainFantaisie = 0;
-    activitesEnAttente.forEach(act => {
-        let gain = (parseInt(act.carte.id) % 2 === 0) ? 6 : 10;
-        scoreFantaisie += gain;
-        totalGainFantaisie += gain;
-        act.element.classList.remove('occupe');
-    });
-    activitesEnAttente = [];
-
-    // 2. CALCUL DE L'IMAGINATION BONUS (NOUVEAU)
-    // On va chercher tous les personnages posés sur le plateau
-    const personnagesSurTerrain = document.querySelectorAll('#game-board .card.personnage');
-    let bonusImagination = 0;
-
-    personnagesSurTerrain.forEach(persoEl => {
-        // On récupère la force (on cherche le texte après l'icône ⚔️)
-        const statsTxt = persoEl.querySelector('.card-footer').innerText;
-        const forceMatch = statsTxt.match(/⚔️(\d+)/); 
-        if (forceMatch) {
-            bonusImagination += parseInt(forceMatch[1]);
+    function defausserManuelle() {
+        if(mainJoueur.length > 0) {
+            pileDefausse.push(mainJoueur.pop());
+            afficherMain();
+            actualiserStats();
         }
-    });
-
-    // 3. Reset des ressources (5 de base + bonus de force)
-    imagination = 5 + bonusImagination;
-    temps = 3;
-
-    // 4. Pioche et Défausse (ton code existant)
-    piger(1);
-    verifierLimiteMain();
-
-    // Message d'info pour le joueur
-    let msg = `Nouveau jour !`;
-    if (totalGainFantaisie > 0) msg += `\n+${totalGainFantaisie} Fantaisie via vos activités.`;
-    if (bonusImagination > 0) msg += `\n+${bonusImagination} Imagination via la force de vos personnages !`;
-    alert(msg);
-
-    actualiserStats();
-    afficherMain();
-}
-    // ... tes résolutions d'activités existantes ...
-    
-    // Phase de Pioche
-    if (deck.length > 0) mainJoueur.push(deck.shift());
-
-    // VERIFICATION DE LA LIMITE
-    verifierLimiteMain();
-
-    // Reset ressources
-    imagination = 5;
-    temps = 3;
-    
-    actualiserStats();
-    afficherMain();
-}
-    function effetMusique() {
-    const notes = ["♪", "♫", "♬", "♩"];
-    for (let i = 0; i < 15; i++) {
-        setTimeout(() => {
-            const note = document.createElement('div');
-            note.className = 'note-musique';
-            note.innerText = notes[Math.floor(Math.random() * notes.length)];
-            
-            // Apparition aléatoire autour du centre
-            note.style.left = (window.innerWidth / 2 + (Math.random() * 200 - 100)) + 'px';
-            note.style.top = (window.innerHeight / 2 + (Math.random() * 200 - 100)) + 'px';
-            
-            document.body.appendChild(note);
-            
-            // Nettoyage
-            setTimeout(() => note.remove(), 2000);
-        }, i * 100);
     }
-}
+
+    function effetMusique() {
+        for (let i = 0; i < 10; i++) {
+            const n = document.createElement('div');
+            n.className = 'note-musique';
+            n.innerText = "♪";
+            n.style.left = (Math.random() * window.innerWidth) + 'px';
+            n.style.top = (window.innerHeight / 2) + 'px';
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 2000);
+        }
+    }
+
+    function actualiserStats() {
+        document.getElementById('imagination').innerText = imagination;
+        document.getElementById('temps').innerText = temps;
+        document.getElementById('fantaisie').innerText = scoreFantaisie;
+        document.getElementById('deck-count').innerText = deck.length;
+        if (scoreFantaisie >= 50) document.getElementById('victory-screen').style.display = 'flex';
+    }
+
     initialiserJeu();
 </script>
 </body>
 </html>
-
