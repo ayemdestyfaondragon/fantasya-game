@@ -40,7 +40,7 @@
 
 <div id="status-bar">
     <div class="stat">🃏 Deck: <span id="deck-count">0</span></div>
-    <div class="stat">✨ Fantaisie: <span id="fantaisie">0</span>/50</div>
+    <div class="stat">✨ Fantaisie: <span id="fantaisie">0</span>/100</div>
     <div class="stat">💎 Imagination: <span id="imagination">5</span></div>
     <div class="stat">⏳ Temps: <span id="temps">3</span></div>
     <button onclick="mulligan()" id="btn-mulligan">Mulligan</button>
@@ -202,10 +202,11 @@
         document.getElementById('temps').innerText = temps;
         document.getElementById('fantaisie').innerText = scoreFantaisie;
         document.getElementById('deck-count').innerText = deck.length;
-        if (scoreFantaisie >= 50) document.getElementById('victory-screen').style.display = 'flex';
+        if (scoreFantaisie >= 100) document.getElementById('victory-screen').style.display = 'flex';
     }
 
     initialiserJeu();
 </script>
 </body>
 </html>
+
